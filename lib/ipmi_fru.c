@@ -5205,43 +5205,90 @@ ipmi_fru_set_field_string_rebuild(struct ipmi_intf * intf, uint8_t fruId,
 		#endif
 
 		/* Must move sections */
-		/* Section that can be modified are as follow
-			Chassis
-			Board
-			product */
-
-		/* Chassis type field */
-		if (f_type == 'c' )
+		/* IPMI FRU Spec does not specify the order of areas in the FRU.
+		 * Therefore, we must check each section's current offset in order to determine
+		 * which areas much be adjusted.
+		 */
+		
+		/* The Internal Use Area does not require the area length be provided, so we must
+		 * work to calculate the length.
+		 */
+		bool internal_move = false;
+		uint8_t nearest_area = fru.size;
+		uint8_t last_area = 0x00;
+		uint32_t end_of_fru;
+		if (header.offset.internal != 0 && header.offset.internal > header_offset)
 		{
-			printf("Moving Section Chassis, from %i to %i\n",
-						((header.offset.board) * 8),
-						((header.offset.board + change_size_by_8) * 8)
-					);
-			memcpy(
-						(fru_data_new + ((header.offset.board + change_size_by_8) * 8)),
-						(fru_data_old + (header.offset.board) * 8),
-						board_len
-					);
-			header.offset.board   += change_size_by_8;
+			internal_move = true;
 		}
-		/* Board type field */
-		if ((f_type == 'c' ) || (f_type == 'b' ))
+		/* Check Chassis, Board, Product, and Multirecord Area offsets to see if they need
+		 * to be moved.
+		 */
+		for (int i = 0; i < 5; i++)
 		{
-			printf("Moving Section Product, from %i to %i\n",
-						((header.offset.product) * 8),
-						((header.offset.product + change_size_by_8) * 8)
-					);
-			memcpy(
-						(fru_data_new + ((header.offset.product + change_size_by_8) * 8)),
-						(fru_data_old + (header.offset.product) * 8),
-						product_len
-					);
-			header.offset.product += change_size_by_8;
+			#ifdef DBG_RESIZE_FRU
+			printf("Offset: %i", header.offsets[i] * 8);
+			#endif
+			/* Offset of zero means area does not exist.
+			 * Internal Use Area must be handled separately
+			 */
+			if (header.offsets[i] <= 0 || header.offsets[i] == header.offset.internal)
+			{
+				#ifdef DBG_RESIZE_FRU
+				printf("\n");
+				#endif
+				continue;
+			}
+			/* Internal Use Area length will be calculated by finding the closest area
+			 * following it.
+			 */
+			if (internal_move && header.offsets[i] > header.offset.internal && header.offsets[i] < nearest_area)
+			{
+				nearest_area = header.offsets[i];
+			}
+			if (last_area < header.offsets[i])
+			{
+				last_area = header.offsets[i];
+				end_of_fru = (header.offsets[i] + *(fru_data_old + (header.offsets[i] * 8) + 1)) * 8;
+				if (header.offsets[i] == header.offset.multi)
+				{
+					end_of_fru = (header.offsets[i] + *(fru_data_old + (header.offsets[i] * 8) + 1)) * 8;
+				}
+			}
+			if ((header.offsets[i] * 8) > header_offset)
+			{
+				#ifdef DBG_RESIZE_FRU
+				printf(" moving by %i bytes.", change_size_by_8 * 8);
+				#endif
+				uint32_t length = *(fru_data_old + (header.offsets[i] * 8) + 1) * 8;
+				/* MultiRecord Area length is third byte rather than second. */
+				if(header.offsets[i] == header.offset.multi)
+				{
+					length = *(fru_data_old + (header.offsets[i] * 8) + 2) * 8;
+				}
+				memcpy(
+					(fru_data_new + ((header.offsets[i] + change_size_by_8) * 8)),
+					(fru_data_old + (header.offsets[i]) * 8),
+					length
+				);
+				header.offsets[i] += change_size_by_8;
+			}
+			#ifdef DBG_RESIZE_FRU
+			printf("\n");
+			#endif
 		}
-
-		if ((f_type == 'c' ) || (f_type == 'b' ) || (f_type == 'p' )) {
-			printf("Change multi offset from %d to %d\n", header.offset.multi, header.offset.multi + change_size_by_8);
-			header.offset.multi += change_size_by_8;
+		if (internal_move)
+		{
+			/* If the internal area is the final area in the FRU, then the only bearing
+			 * we have for the length of the FRU is the size of the FRU.
+			 */
+			uint32_t length = nearest_area - header.offset.internal;
+			memcpy(
+				(fru_data_new + ((header.offset.internal + change_size_by_8) * 8)),
+				(fru_data_old + (header.offset.internal) * 8),
+				length
+			);
+			header.offset.internal += change_size_by_8;
 		}
 
 		/* Adjust length of the section */
@@ -5271,27 +5318,18 @@ ipmi_fru_set_field_string_rebuild(struct ipmi_intf * intf, uint8_t fruId,
 			memcpy(fru_data_new, pfru_header, sizeof(struct fru_header));
 		}
 
-		/* Move remaining sections in 1 copy */
-		printf("Moving Remaining Bytes (Multi-Rec , etc..), from %i to %i\n",
-					remaining_offset,
-					((header.offset.product) * 8) + product_len_new
-				);
-		if(((header.offset.product * 8) + product_len_new - remaining_offset) < 0)
+		/* If FRU has shrunk in size, zero-out any leftover data */
+		if (change_size_by_8 < 0)
 		{
-			memcpy(
-						fru_data_new + (header.offset.product * 8) + product_len_new,
-						fru_data_old + remaining_offset,
-						fru.size - remaining_offset
-					);
+			end_of_fru += change_size_by_8 * 8;
+			int length_of_erase = change_size_by_8 * -1 * 8;
+			#ifdef DBG_RESIZE_FRU
+			printf("Erasing leftover data from %i to %i\n", end_of_fru, end_of_fru + length_of_erase);
+			#endif
+			memset(fru_data_new + end_of_fru, 0, length_of_erase);
 		}
-		else
-		{
-			memcpy(
-						fru_data_new + (header.offset.product * 8) + product_len_new,
-						fru_data_old + remaining_offset,
-						fru.size - ((header.offset.product * 8) + product_len_new)
-					);
-		}
+		/* Step 7 assumes fru.size is the size of the new FRU. */
+		fru.size += (change_size_by_8 * 8);
 	}
 
 	/* Update only if it's fits padding length as defined in the spec, otherwise, it's an internal
