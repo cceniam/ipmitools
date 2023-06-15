@@ -46,6 +46,7 @@
 #define GET_FRU_INFO		0x10
 #define GET_FRU_DATA		0x11
 #define SET_FRU_DATA		0x12
+#define FRU_AREA_COUNT		5
 
 enum {
 	FRU_CHASSIS_PARTNO,
@@ -82,7 +83,7 @@ struct fru_header {
 			uint8_t product;
 			uint8_t multi;
 		} offset;
-		uint8_t offsets[5];
+		uint8_t offsets[FRU_AREA_COUNT];
 	};
 	uint8_t pad;
 	uint8_t checksum;
