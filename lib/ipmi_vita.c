@@ -210,7 +210,7 @@ vita_discover(struct ipmi_intf *intf)
 	} else if ((rsp->data[3] & 0x03) != 0) {
 		lprintf(LOG_INFO, "Unknown VSO Standard %d",
 			(rsp->data[3] & 0x03));
-	} else if ((rsp->data[4] & 0x0F) != 1) {
+	} else if ((rsp->data[4] & 0x0F) != 1 && (rsp->data[4] & 0x0F) != 2) {
 		lprintf(LOG_INFO, "Unknown VSO Specification Revision %d.%d",
 			(rsp->data[4] & 0x0F), (rsp->data[4] >> 4));
 	} else {
