@@ -724,7 +724,7 @@ read_fru_area(struct ipmi_intf * intf, struct fru_info *fru, uint8_t id,
 
 	finish = offset + length;
 	if (finish > fru->size) {
-		memset(frubuf + fru->size, 0, length - fru->size);
+		memset(frubuf + fru->size, 0, finish - fru->size);
 		finish = fru->size;
 		lprintf(LOG_NOTICE, "Read FRU Area length %d too large, "
 			"Adjusting to %d",
