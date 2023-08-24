@@ -857,13 +857,13 @@ ipmi_set_user_access(struct ipmi_intf *intf, int argc, char **argv)
 					bool boolval = (UA_BOOLEAN_INVERSE == options[j].type)
 						? false
 						: true;
-					*options[j].val = boolval;
 					if (!strcmp(optval, "off")
 					    || !strcmp(optval, "disable")
 					    || !strcmp(optval, "no"))
 					{
 						boolval = !boolval;
 					}
+					*options[j].val = boolval;
 				} else if (UINT8_MAX
 				           != (val = str2val(optval, ipmi_privlvl_vals)))
 				{
