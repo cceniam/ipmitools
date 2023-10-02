@@ -71,25 +71,28 @@ struct fru_info {
 };
 
 #ifdef HAVE_PRAGMA_PACK
-#pragma pack(1)
+#pragma pack(push, 1)
 #endif
 struct fru_header {
 	uint8_t version;
 	union {
-		struct {
+		struct fru_hdr_offset_s {
 			uint8_t internal;
 			uint8_t chassis;
 			uint8_t board;
 			uint8_t product;
 			uint8_t multi;
 		} offset;
+#define FRU_BLOCK_SZ 8 /* Offsets here are in blocks, not bytes */
+//		uint8_t offsets[sizeof(struct fru_hdr_offset_s)];
 		uint8_t offsets[FRU_AREA_COUNT];
 	};
 	uint8_t pad;
 	uint8_t checksum;
-}ATTRIBUTE_PACKING;
+} ATTRIBUTE_PACKING;
+#define FRU_AREAS_COUNT sizeof(((struct fru_header *)NULL)->offset)
 #ifdef HAVE_PRAGMA_PACK
-#pragma pack(0)
+#pragma pack(pop)
 #endif
 
 struct fru_area_chassis {
