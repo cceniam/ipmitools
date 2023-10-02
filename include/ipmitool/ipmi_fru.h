@@ -84,8 +84,7 @@ struct fru_header {
 			uint8_t multi;
 		} offset;
 #define FRU_BLOCK_SZ 8 /* Offsets here are in blocks, not bytes */
-//		uint8_t offsets[sizeof(struct fru_hdr_offset_s)];
-		uint8_t offsets[FRU_AREA_COUNT];
+		uint8_t offsets[sizeof(struct fru_hdr_offset_s)];
 	};
 	uint8_t pad;
 	uint8_t checksum;
