@@ -131,7 +131,8 @@ static int ipmi_fru_set_field_string(struct ipmi_intf * intf, unsigned
 static int
 ipmi_fru_set_field_string_rebuild(struct ipmi_intf * intf, uint8_t fruId,
 											struct fru_info fru, struct fru_header header,
-											uint8_t f_type, uint8_t f_index, char *f_string);
+											uint8_t f_type, uint8_t f_index, char *f_string,
+											int new_size);
 
 static void
 fru_area_print_multirec_bloc(struct ipmi_intf * intf, struct fru_info * fru,
@@ -4997,12 +4998,19 @@ f_type, uint8_t f_index, char *f_string)
 			rc = -1;
 			goto ipmi_fru_set_field_string_out;
 		}
-	}
-	else {
-		printf("String size are not equal, resizing fru to fit new string\n");
-		if(
-				ipmi_fru_set_field_string_rebuild(intf,fruId,fru,header,f_type,f_index,f_string)
-		)
+    }
+    else {
+		int new_fru_size = fru.size;
+		int change =
+			strlen((const char *)f_string) - strlen((const char *)fru_area);
+		if (change > 0)
+		{
+			/* Fru area is padded to be 8 bytes aligned */
+			new_fru_size = fru.size + change + FRU_BLOCK_SZ;
+		}
+		if (ipmi_fru_set_field_string_rebuild(intf, fruId, fru, header,
+                                                f_type, f_index, f_string,
+                                                new_fru_size))
 		{
 			rc = -1;
 			goto ipmi_fru_set_field_string_out;
@@ -5048,7 +5056,8 @@ ipmi_fru_set_field_string_out:
 static int
 ipmi_fru_set_field_string_rebuild(struct ipmi_intf * intf, uint8_t fruId,
 											struct fru_info fru, struct fru_header header,
-											uint8_t f_type, uint8_t f_index, char *f_string)
+											uint8_t f_type, uint8_t f_index, char *f_string,
+											int new_size)
 {
 	int i = 0;
 	uint8_t *fru_data_old = NULL;
@@ -5065,7 +5074,7 @@ ipmi_fru_set_field_string_rebuild(struct ipmi_intf * intf, uint8_t fruId,
 
 	fru_data_old = calloc( fru.size, sizeof(uint8_t) );
 
-	fru_data_new = malloc( fru.size );
+	fru_data_new = malloc( new_size );
 
 	if (!fru_data_old || !fru_data_new) {
 		printf("Out of memory!\n");
