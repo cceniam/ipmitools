@@ -43,6 +43,21 @@
 
 #define FRU_END_OF_FIELDS 0xc1
 
+#define FRU_TYPE_LENGTH_MASK 0x3f
+#define SDR_TYPE_LENGTH_MASK 0x1f
+// ID String type/len has a maximum value of 31
+// Binary/BCD use 2x that number of chars to represent the string
+// 6-bit encoding and Ascii/Latin1 need less space
+// Allow enough space for a trailing NUL
+#define SDR_TYPE_MAX_STR_LEN ((SDR_TYPE_LENGTH_MASK * 2) + 1)
+
+#define TYPECODE_MASK 0xC0
+#define TYPECODE_BINARY 0x00
+#define TYPECODE_UNICODE 0x00
+#define TYPECODE_BCDPLUS 0x40
+#define TYPECODE_6BITPACKED 0x80
+#define TYPECODE_ASCII_LATIN 0xC0
+
 #define GET_FRU_INFO		0x10
 #define GET_FRU_DATA		0x11
 #define SET_FRU_DATA		0x12
@@ -664,3 +679,4 @@ typedef struct ipmi_fru_bloc {
 int ipmi_fru_main(struct ipmi_intf *intf, int argc, char **argv);
 int ipmi_fru_print(struct ipmi_intf *intf, struct sdr_record_fru_locator *fru);
 char *get_fru_area_str(uint8_t *data, uint32_t *offset);
+char *get_sdr_str(const uint8_t * const data, uint8_t *name_length);

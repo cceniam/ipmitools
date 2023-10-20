@@ -102,6 +102,8 @@ static const char * chassis_type_desc[] = {
 	"Blade Enclosure"
 };
 
+static char *unicode_unsupported = "Unicode unsupported";
+
 static inline bool fru_cc_rq2big(int code) {
 	return (code == IPMI_CC_REQ_DATA_INV_LENGTH
 		|| code == IPMI_CC_REQ_DATA_FIELD_EXCEED
@@ -140,6 +142,80 @@ int
 read_fru_area(struct ipmi_intf * intf, struct fru_info *fru, uint8_t id,
 			uint32_t offset, uint32_t length, uint8_t *frubuf);
 void free_fru_bloc(t_ipmi_fru_bloc *bloc);
+
+/* convert_as_bcd_plus  -  Convert SDR ID_STRING record from BCD Plus format
+*
+* @str: Pointer to a buffer large enough to hold the decoded ID_STRING
+* @data:   Pointer to the first BDC Plus byte in ID_STRING
+* @size: The length portion of the Type/Len field times 2
+*
+* returns an error code if the incoming buffer pointers are NULL
+*/
+static
+int
+convert_as_bcd_plus(char *str, const uint8_t *data, size_t size)
+{
+	if (!str || !data)
+		return -1;
+	static const char bcd_plus[] = "0123456789 -.:,_";
+	size_t index;
+	for (index = 0; index < size; index++)
+		str[index] = bcd_plus[((data[index / 2] >>
+		                      ((index % 2) ? 0 : 4)) & 0x0f)];
+	str[index] = '\0';
+	return 0;
+}
+
+/* convert_as_6bit_packed  -  Convert SDR ID_STRING record from 6-bit ASCII
+                              format
+*
+* @str: Pointer to a buffer large enough to hold the decoded ID_STRING
+*       The decoded string in placed in the buffer pointed to by 'str'
+* @data:   Pointer to the first 6-bit ASCII byte in ID_STRING
+* @name_length: The length of the decoded string
+* @size: The length portion of the Type/Len field
+*
+* returns an error code if the incoming buffer pointers are NULL
+*/
+static
+int
+convert_as_6bit_packed(char *str, const uint8_t *data, uint8_t *name_length,
+		       size_t len)
+{
+	union {
+		uint32_t bits;
+		char chars[4];
+	} u;
+
+	size_t i, j, k, rem;
+	int char_idx;
+
+	for (i = j = 0; i < len; i += 3) {
+		u.bits = 0;
+		k = ((len - i) < 3 ? (len - i) : 3);
+		rem = ((len - i) < 3 ? (len - i) : 4);
+
+#if WORDS_BIGENDIAN
+		u.chars[3] = data[i];
+		u.chars[2] = (k > 1 ? data[i+1] : 0);
+		u.chars[1] = (k > 2 ? data[i+2] : 0);
+		char_idx = 3;
+#else
+		memcpy((void *)&u.bits, &data[i], k);
+		char_idx = 0;
+#endif
+		for (k=0; k<rem; k++) {
+			str[j++] = ((u.chars[char_idx] & 0x3f) + 0x20);
+			u.bits >>= 6;
+		}
+	}
+	str[j] = '\0';
+	// strip trailing blank spaces
+	while (j > 1 && str[j-1] == 0x20)
+		str[--j] = '\0';
+	*name_length = j;
+	return 0;
+}
 
 /**
  * Caclculate the simple FRU checksum as per IPMI FRU specification.
@@ -194,89 +270,61 @@ bool fru_checksum_is_valid(void *area, size_t len)
 */
 char * get_fru_area_str(uint8_t * data, uint32_t * offset)
 {
-	static const char bcd_plus[] = "0123456789 -.:,_";
-	char * str;
-	int len, off, size, i, j, k, typecode, char_idx;
-	union {
-		uint32_t bits;
-		char chars[4];
-	} u;
+	char *str = NULL;
+	uint8_t *id_string_buf = NULL;
+	size_t len = 0;
+	size_t off = 0;
+	size_t size = 0;
+	uint8_t typecode;
+	uint8_t name_length = 0;
 
 	size = 0;
 	off = *offset;
 
 	/* bits 6:7 contain format */
-	typecode = ((data[off] & 0xC0) >> 6);
-
-	// printf("Typecode:%i\n", typecode);
-	/* bits 0:5 contain length */
-	len = data[off++];
-	len &= 0x3f;
+	typecode = data[off] & TYPECODE_MASK;
+	len = data[off++] & FRU_TYPE_LENGTH_MASK;
+	id_string_buf = &data[off];
 
 	switch (typecode) {
-	case 0:           /* 00b: binary/unspecified */
-	case 1:           /* 01b: BCD plus */
+	case TYPECODE_BINARY:
+	case TYPECODE_BCDPLUS:
 		/* hex dump or BCD -> 2x length */
 		size = (len * 2);
 		break;
-	case 2:           /* 10b: 6-bit ASCII */
+	case TYPECODE_6BITPACKED:
 		/* 4 chars per group of 1-3 bytes, round up to 4 bytes boundary */
 		size = (len / 3 + 1) * 4;
 		break;
-	case 3:           /* 11b: 8-bit ASCII */
+	case TYPECODE_ASCII_LATIN:
 		/* no length adjustment */
 		size = len;
 		break;
 	}
 
-	if (size < 1) {
-		*offset = off;
-		return NULL;
-	}
-	str = malloc(size+1);
-	if (!str)
-		return NULL;
-	memset(str, 0, size+1);
-
 	if (size == 0) {
-		str[0] = '\0';
 		*offset = off;
 		return str;
 	}
 
+	str = malloc(size+1);
+	if (!str)
+		return str;
+	memset(str, 0, size+1);
+
 	switch (typecode) {
-	case 0:        /* Binary */
-		strncpy(str, buf2str(&data[off], len), size);
+	case TYPECODE_BINARY:
+		strncpy(str, buf2str(id_string_buf, len), size);
 		break;
 
-	case 1:        /* BCD plus */
-		for (k = 0; k < size; k++)
-			str[k] = bcd_plus[((data[off + k / 2] >> ((k % 2) ? 0 : 4)) & 0x0f)];
-		str[k] = '\0';
+	case TYPECODE_BCDPLUS:
+		convert_as_bcd_plus(str, id_string_buf, size);
+		break;
+	case TYPECODE_6BITPACKED:
+		convert_as_6bit_packed(str, id_string_buf, &name_length, len);
 		break;
 
-	case 2:        /* 6-bit ASCII */
-		for (i = j = 0; i < len; i += 3) {
-			u.bits = 0;
-			k = ((len - i) < 3 ? (len - i) : 3);
-#if WORDS_BIGENDIAN
-			u.chars[3] = data[off+i];
-			u.chars[2] = (k > 1 ? data[off+i+1] : 0);
-			u.chars[1] = (k > 2 ? data[off+i+2] : 0);
-			char_idx = 3;
-#else
-			memcpy((void *)&u.bits, &data[off+i], k);
-			char_idx = 0;
-#endif
-			for (k=0; k<4; k++) {
-				str[j++] = ((u.chars[char_idx] & 0x3f) + 0x20);
-				u.bits >>= 6;
-			}
-		}
-		str[j] = '\0';
-		break;
-
-	case 3:
+	case TYPECODE_ASCII_LATIN:
 		memcpy(str, &data[off], size);
 		str[size] = '\0';
 		break;
@@ -284,6 +332,61 @@ char * get_fru_area_str(uint8_t * data, uint32_t * offset)
 
 	off += len;
 	*offset = off;
+
+	return str;
+}
+
+/* get_sdr_str  -  Decode the SDR ID String bytes
+*
+* The function requires the data/offset parameters to point to the SDR's
+* ID String Type/Len entry.
+* @data:   points to the ID String type/len
+* @name_length: returns the length of the string decoded from the SDR
+*
+* returns a pointer to a malloc'd string containing the SDR ID String
+*/
+char * get_sdr_str(const uint8_t * const data, uint8_t *name_length)
+{
+	char *str = NULL;
+	const uint8_t *id_string_buf = NULL;
+	size_t len = 0;
+	size_t off = 0;
+	size_t size = 0;
+	uint8_t typecode;
+
+	if (!data || !name_length)
+		return str;
+
+	/* bits 6:7 contain format */
+	typecode = data[off] & TYPECODE_MASK;
+	len = data[off] & SDR_TYPE_LENGTH_MASK;
+	id_string_buf = &data[off+1];
+	str = malloc(SDR_TYPE_MAX_STR_LEN);
+	if (!str)
+		return str;
+	memset(str, 0, SDR_TYPE_MAX_STR_LEN);
+
+	switch (typecode) {
+	case TYPECODE_UNICODE:
+		size = strlen(unicode_unsupported);
+		strncpy(str, unicode_unsupported, size);
+		*name_length = size;
+		break;
+	case TYPECODE_BCDPLUS:
+		size = len * 2;
+		convert_as_bcd_plus(str, id_string_buf, size);
+		*name_length = len;
+		break;
+	case TYPECODE_6BITPACKED:
+		convert_as_6bit_packed(str, id_string_buf, name_length, len);
+		break;
+
+	case TYPECODE_ASCII_LATIN:
+		memcpy(str, id_string_buf, len);
+		str[len] = '\0';
+		*name_length = len;
+		break;
+	}
 
 	return str;
 }
@@ -3203,7 +3306,8 @@ __ipmi_fru_print(struct ipmi_intf * intf, uint8_t id)
 int
 ipmi_fru_print(struct ipmi_intf * intf, struct sdr_record_fru_locator * fru)
 {
-	char desc[17];
+	char *id_string = NULL;
+	uint8_t id_string_len = 0;
 	uint8_t  bridged_request = 0;
 	uint32_t save_addr;
 	uint32_t save_channel;
@@ -3238,10 +3342,19 @@ ipmi_fru_print(struct ipmi_intf * intf, struct sdr_record_fru_locator * fru)
 		fru->device_id == 0)
 		return 0;
 
-	memset(desc, 0, sizeof(desc));
-	memcpy(desc, fru->id_string, __min(fru->id_code & 0x01f, sizeof(desc)));
-	desc[fru->id_code & 0x01f] = 0;
-	printf("FRU Device Description : %s (ID %d)\n", desc, fru->device_id);
+	id_string = get_sdr_str(&fru->id_code, &id_string_len);
+	if (id_string) {
+		if (id_string_len) {
+			printf("FRU Device Description : %s (ID %d)\n", id_string,
+			       fru->device_id);
+		} else {
+			printf("FRU Device Description : Unknown (ID %d)\n",
+			       fru->device_id);
+		}
+		free_n(&id_string);
+	} else {
+		printf("FRU Device Description : Unknown (ID %d)\n", fru->device_id);
+	}
 
 	switch (fru->dev_type_modifier) {
 	case 0x00:
@@ -3290,12 +3403,14 @@ ipmi_fru_print_all(struct ipmi_intf * intf)
 	struct ipmi_sdr_iterator * itr;
 	struct sdr_get_rs * header;
 	struct sdr_record_fru_locator * fru;
-	int rc;
+	int rc = -1;
 	struct ipmi_rs * rsp;
 	struct ipmi_rq req;
 	struct ipm_devid_rsp *devid;
 	struct sdr_record_mc_locator * mc;
 	uint32_t save_addr;
+	int8_t id_string_len = 0;
+	char *id_string;
 
 	printf("FRU Device Description : Builtin FRU Device (ID 0)\n");
 	/* TODO: Figure out if FRU device 0 may show up in SDR records. */
@@ -3353,7 +3468,20 @@ ipmi_fru_print_all(struct ipmi_intf * intf)
 				/* set new target address to satellite controller */
 				intf->target_addr = mc->dev_slave_addr;
 
-				printf("FRU Device Description : %-16s\n", mc->id_string);
+				id_string = get_sdr_str(&mc->id_code, &id_string_len);
+				if (id_string) {
+					if (id_string_len) {
+						printf("FRU Device Description : %-*s\n",
+						       SDR_MAX_ID_STR_DECODED_LEN, mc->id_string);
+					} else {
+						printf("FRU Device Description : %-*s\n",
+						       SDR_MAX_ID_STR_DECODED_LEN, "Unknown");
+					}
+					free_n(&id_string);
+				} else {
+					printf("FRU Device Description : %-*s\n",
+					       SDR_MAX_ID_STR_DECODED_LEN, "Unknown");
+				}
 
 				/* print the FRU by issuing FRU commands to the satellite     */
 				/* controller.						      */

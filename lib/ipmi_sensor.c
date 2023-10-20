@@ -36,6 +36,7 @@
 #include <ipmitool/ipmi.h>
 #include <ipmitool/helper.h>
 #include <ipmitool/log.h>
+#include <ipmitool/ipmi_fru.h>
 #include <ipmitool/ipmi_intf.h>
 #include <ipmitool/ipmi_sdr.h>
 #include <ipmitool/ipmi_sel.h>
@@ -60,13 +61,8 @@ ipmi_sensor_get_sensor_reading_factors(
 	struct ipmi_rs * rsp;
 	uint8_t req_data[2];
 
-	char id[17];
-
 	if (!intf || !sensor)
 		return -1;
-
-	memset(id, 0, sizeof(id));
-	memcpy(id, sensor->id_string, 16);
 
 	req_data[0] = sensor->cmn.keys.sensor_num;
 	req_data[1] = reading;
@@ -81,8 +77,22 @@ ipmi_sensor_get_sensor_reading_factors(
 	rsp = intf->sendrecv(intf, &req);
 
 	if (!rsp) {
-		lprintf(LOG_ERR, "Error updating reading factor for sensor %s (#%02x)",
-			id, sensor->cmn.keys.sensor_num);
+		uint8_t id_string_len = 0;
+		uint32_t offset = 0;
+		char *id_string = get_sdr_str(&sensor->id_code, &id_string_len);
+
+		if (id_string) {
+			lprintf(LOG_ERR, "Error updating reading factor for "
+			        "sensor %s (ID #%02x LUN %d)", id_string,
+			        sensor->cmn.keys.sensor_num,
+			        sensor->cmn.keys.lun);
+			free_n(&id_string);
+		} else {
+			lprintf(LOG_ERR, "Error updating reading factor for "
+			        "sensor (ID #%02x : LUN %d)",
+			        sensor->cmn.keys.sensor_num,
+			        sensor->cmn.keys.lun);
+		}
 		return -1;
 	} else if (rsp->ccode) {
 		return -1;
@@ -193,7 +203,7 @@ ipmi_sensor_print_fc_discrete(struct ipmi_intf *intf,
 			/* output format
 			 *   id value units status thresholds....
 			 */
-			printf("%-16s ", sr->s_id);
+			printf("%-*s ", SDR_MAX_ID_STR_DECODED_LEN, sr->s_id);
 			if (sr->s_reading_valid) {
 				if (sr->s_has_analog_value) {
 					/* don't show discrete component */
@@ -308,7 +318,7 @@ dump_sensor_fc_thredshold(
 	struct ipmi_rs *rsp,
 	struct sensor_reading *sr)
 {
-	printf("%-16s ", sr->s_id);
+	printf("%-*s ", SDR_MAX_ID_STR_DECODED_LEN, sr->s_id);
 	if (sr->s_reading_valid) {
 		if (sr->s_has_analog_value)
 			printf("| %-10.3f | %-10s | %-6s",
@@ -927,7 +937,8 @@ ipmi_sensor_get_reading(struct ipmi_intf *intf, int argc, char **argv)
 			if (csv_output)
 				printf("%s,%s\n", argv[i], sr->s_a_str);
 			else
-				printf("%-16s | %s\n", argv[i], sr->s_a_str);
+				printf("%-*s | %s\n", SDR_MAX_ID_STR_DECODED_LEN, argv[i],
+				       sr->s_a_str);
 
 			break;
 		}

@@ -430,6 +430,25 @@ struct sdr_record_common_sensor {
 #if HAVE_PRAGMA_PACK
 #pragma pack(pop)
 #endif
+/* The IPMI 2.0 specification is imprecise in how long a sensor name record
+ * can be. Each Type 01, 02, etc... record include a Type/Len record
+ * permitting up to 30 or 31 bytes for passing string values. Despite the
+ * Type/Len record allowing more than 16 byte string names, there is
+ * qualifying text stating the maximum string length is 16 bytes. See the Full
+ * Sensor Data record table. The same section also states any additional bytes
+ * SHOULD be ignored. It does not mandate they MUST be ignored.
+ * There are BMC implementations, specifically OpenBMC, which are choosing to
+ * ignore the guidance, and use the full range of the Type/Len byte. This
+ * allows longer strings to be transferred.
+ * The longer strings include 6-bit string encoding per Table 43-14. This
+ * encoding allows 4 characters to be encoded in 3 bytes. A Type/Len record
+ * with 31 bytes reported will allow:
+ *   (31 bytes * 4 chars) / 3 bytes = 41 1/3 available characters.
+ *   Rounding down allows for 41 full characters. Room must be made for the
+ *   terminating NUL, for a total size of 42 characters.
+ */
+#define SDR_MAX_ID_STR_LEN 31
+#define SDR_MAX_ID_STR_DECODED_LEN 42
 
 #if HAVE_PRAGMA_PACK
 #pragma pack(push, 1)
@@ -465,7 +484,7 @@ struct sdr_record_compact_sensor {
 	uint8_t __reserved[3];
 	uint8_t oem;		/* reserved for OEM use */
 	uint8_t id_code;	/* sensor ID string type/length code */
-	uint8_t id_string[16];	/* sensor ID string bytes, only if id_code != 0 */
+	uint8_t id_string[SDR_MAX_ID_STR_DECODED_LEN];	/* sensor ID string bytes, only if id_code != 0 */
 } ATTRIBUTE_PACKING;
 #if HAVE_PRAGMA_PACK
 #pragma pack(pop)
@@ -516,7 +535,7 @@ struct sdr_record_eventonly_sensor {
 	uint8_t __reserved;
 	uint8_t oem;		/* reserved for OEM use */
 	uint8_t id_code;	/* sensor ID string type/length code */
-	uint8_t id_string[16];	/* sensor ID string bytes, only if id_code != 0 */
+	uint8_t id_string[SDR_MAX_ID_STR_DECODED_LEN];	/* sensor ID string bytes, only if id_code != 0 */
 
 } ATTRIBUTE_PACKING;
 #if HAVE_PRAGMA_PACK
@@ -586,7 +605,7 @@ struct sdr_record_full_sensor {
 	uint8_t __reserved[2];
 	uint8_t oem;		/* reserved for OEM use */
 	uint8_t id_code;	/* sensor ID string type/length code */
-	uint8_t id_string[16];	/* sensor ID string bytes, only if id_code != 0 */
+	uint8_t id_string[SDR_MAX_ID_STR_DECODED_LEN];	/* sensor ID string bytes, only if id_code != 0 */
 } ATTRIBUTE_PACKING;
 #if HAVE_PRAGMA_PACK
 #pragma pack(pop)
@@ -618,7 +637,7 @@ struct sdr_record_mc_locator {
 	struct entity_id entity;
 	uint8_t oem;
 	uint8_t id_code;
-	uint8_t id_string[16];
+	uint8_t id_string[SDR_MAX_ID_STR_DECODED_LEN];
 } ATTRIBUTE_PACKING;
 #if HAVE_PRAGMA_PACK
 #pragma pack(pop)
@@ -654,7 +673,7 @@ struct sdr_record_fru_locator {
 	struct entity_id entity;
 	uint8_t oem;
 	uint8_t id_code;
-	uint8_t id_string[16];
+	uint8_t id_string[SDR_MAX_ID_STR_DECODED_LEN];
 } ATTRIBUTE_PACKING;
 #if HAVE_PRAGMA_PACK
 #pragma pack(pop)
@@ -688,7 +707,7 @@ struct sdr_record_generic_locator {
 	struct entity_id entity;
 	uint8_t oem;
 	uint8_t id_code;
-	uint8_t id_string[16];
+	uint8_t id_string[SDR_MAX_ID_STR_DECODED_LEN];
 } ATTRIBUTE_PACKING;
 #if HAVE_PRAGMA_PACK
 #pragma pack(pop)
@@ -802,7 +821,7 @@ struct sdr_record_list {
 #define SENSOR_TYPE_MAX 0x2C
 
 struct sensor_reading {
-	char		s_id[17];		/* name of the sensor */
+	char		s_id[SDR_MAX_ID_STR_DECODED_LEN];/* name of the sensor */
 	struct sdr_record_full_sensor    *full;
 	struct sdr_record_compact_sensor *compact;
 	uint8_t		s_reading_valid;	/* read value valididity */

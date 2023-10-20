@@ -54,7 +54,6 @@ extern int write_fru_area(struct ipmi_intf * intf, struct fru_info *fru,
 		uint8_t id, uint16_t soffset,
 		uint16_t doffset,  uint16_t length,
 		uint8_t *pFrubuf);
-extern char *get_fru_area_str(uint8_t *data, uint32_t *offset);
 
 static void ipmi_kontron_help(void);
 static int ipmi_kontron_set_serial_number(struct ipmi_intf *intf);
