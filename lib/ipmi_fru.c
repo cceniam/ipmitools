@@ -5006,7 +5006,10 @@ f_type, uint8_t f_index, char *f_string)
 		if (change > 0)
 		{
 			/* Fru area is padded to be 8 bytes aligned */
-			new_fru_size = fru.size + change + FRU_BLOCK_SZ;
+			int new_raw_size = fru.size + change;
+			int new_raw_padded = new_raw_size + FRU_BLOCK_SZ - 1;
+			int new_block_count = new_raw_padded / FRU_BLOCK_SZ;
+			new_fru_size = new_block_count * FRU_BLOCK_SZ;
 		}
 		if (ipmi_fru_set_field_string_rebuild(intf, fruId, fru, header,
                                                 f_type, f_index, f_string,
@@ -5073,9 +5076,7 @@ ipmi_fru_set_field_string_rebuild(struct ipmi_intf * intf, uint8_t fruId,
 	int rc = 1;
 
 	fru_data_old = calloc( fru.size, sizeof(uint8_t) );
-
 	fru_data_new = malloc( new_size );
-
 	if (!fru_data_old || !fru_data_new) {
 		printf("Out of memory!\n");
 		rc = -1;
@@ -5216,7 +5217,7 @@ ipmi_fru_set_field_string_rebuild(struct ipmi_intf * intf, uint8_t fruId,
 		/* Must move sections */
 		/* IPMI FRU Spec does not specify the order of areas in the FRU.
 		 * Therefore, we must check each section's current offset in order to determine
-		 * which areas much be adjusted.
+		 * which areas must be adjusted.
 		 */
 		
 		/* The Internal Use Area does not require the area length be provided, so we must
@@ -5253,25 +5254,25 @@ ipmi_fru_set_field_string_rebuild(struct ipmi_intf * intf, uint8_t fruId,
 			if (last_area < header.offsets[i])
 			{
 				last_area = header.offsets[i];
-				end_of_fru = (header.offsets[i] + *(fru_data_old + (header.offsets[i] * 8) + 1)) * 8;
+				int record_block_length = *(fru_data_old + (header.offsets[i] * FRU_BLOCK_SZ) + 1);
+				end_of_fru = (last_area + record_block_length) * FRU_BLOCK_SZ;
 				if (header.offsets[i] == header.offset.multi)
 				{
-					end_of_fru = (header.offsets[i] + *(fru_data_old + (header.offsets[i] * 8) + 1)) * 8;
+					int record_block_length = *(fru_data_old + (header.offsets[i] * FRU_BLOCK_SZ) + 2);
+					end_of_fru = (header.offsets[i] + record_block_length) * FRU_BLOCK_SZ;
 				}
 			}
 			if ((header.offsets[i] * 8) > header_offset)
 			{
-				uint32_t length = *(fru_data_old + (header.offsets[i] * 8) + 1) * 8;
+				uint32_t length = *(fru_data_old + (header.offsets[i] * FRU_BLOCK_SZ) + 1) * FRU_BLOCK_SZ;
 				/* MultiRecord Area length is third byte rather than second. */
 				if(header.offsets[i] == header.offset.multi)
 				{
-					length = *(fru_data_old + (header.offsets[i] * 8) + 2) * 8;
+					length = *(fru_data_old + (header.offsets[i] * FRU_BLOCK_SZ) + 2) * FRU_BLOCK_SZ;
 				}
-				memcpy(
-					(fru_data_new + ((header.offsets[i] + change_size_by_8) * 8)),
-					(fru_data_old + (header.offsets[i]) * 8),
-					length
-				);
+				int old_area_offset = fru_data_old + (header.offsets[i]) * FRU_BLOCK_SZ;
+				int new_area_offset = fru_data_new + ((header.offsets[i] + change_size_by_8) * FRU_BLOCK_SZ);
+				memcpy(old_area_offset, new_area_offset, length);
 				header.offsets[i] += change_size_by_8;
 			}
 		}
@@ -5281,11 +5282,9 @@ ipmi_fru_set_field_string_rebuild(struct ipmi_intf * intf, uint8_t fruId,
 			 * we have for the length of the FRU is the size of the FRU.
 			 */
 			uint32_t length = nearest_area - header.offset.internal;
-			memcpy(
-				(fru_data_new + ((header.offset.internal + change_size_by_8) * 8)),
-				(fru_data_old + (header.offset.internal) * 8),
-				length
-			);
+			int old_area_offset = fru_data_old + (header.offset.internal) * FRU_BLOCK_SZ;
+			int new_area_offset = fru_data_new + ((header.offset.internal + change_size_by_8) * FRU_BLOCK_SZ);
+			memcpy(old_area_offset, new_area_offset, length);
 			header.offset.internal += change_size_by_8;
 		}
 
