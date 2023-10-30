@@ -46,7 +46,6 @@
 #define GET_FRU_INFO		0x10
 #define GET_FRU_DATA		0x11
 #define SET_FRU_DATA		0x12
-#define FRU_AREA_COUNT		5
 
 enum {
 	FRU_CHASSIS_PARTNO,
