@@ -5258,11 +5258,20 @@ ipmi_fru_set_field_string_rebuild(struct ipmi_intf * intf, uint8_t fruId,
 				end_of_fru = (last_area + record_block_length) * FRU_BLOCK_SZ;
 				if (header.offsets[i] == header.offset.multi)
 				{
-					int record_block_length = *(fru_data_old + (header.offsets[i] * FRU_BLOCK_SZ) + 2);
-					end_of_fru = (header.offsets[i] + record_block_length) * FRU_BLOCK_SZ;
+					int mr_length = 0;
+					int record_start = header.offset.multi * FRU_BLOCK_SZ;
+					struct fru_multirec_header *mr_header = (struct fru_multirec_header *) (fru_data_old + record_start);
+					while ((mr_header->format & FRU_RECORD_FORMAT_EOL_MASK) != 0)
+					{
+						int record_length = mr_header->len + sizeof(struct fru_multirec_header);
+						record_start += record_length;
+						mr_length += record_length;
+						mr_header = (struct fru_multirec_header *) (fru_data_old + record_start);
+					}
+					end_of_fru = header.offset.multi * FRU_BLOCK_SZ + mr_length;
 				}
 			}
-			if ((header.offsets[i] * 8) > header_offset)
+			if ((header.offsets[i] * FRU_BLOCK_SZ) > header_offset)
 			{
 				uint32_t length = *(fru_data_old + (header.offsets[i] * FRU_BLOCK_SZ) + 1) * FRU_BLOCK_SZ;
 				/* MultiRecord Area length is third byte rather than second. */
@@ -5270,9 +5279,9 @@ ipmi_fru_set_field_string_rebuild(struct ipmi_intf * intf, uint8_t fruId,
 				{
 					length = *(fru_data_old + (header.offsets[i] * FRU_BLOCK_SZ) + 2) * FRU_BLOCK_SZ;
 				}
-				int old_area_offset = fru_data_old + (header.offsets[i]) * FRU_BLOCK_SZ;
-				int new_area_offset = fru_data_new + ((header.offsets[i] + change_size_by_8) * FRU_BLOCK_SZ);
-				memcpy(old_area_offset, new_area_offset, length);
+				uint8_t *old_area_offset = fru_data_old + (header.offsets[i]) * FRU_BLOCK_SZ;
+				uint8_t *new_area_offset = fru_data_new + ((header.offsets[i] + change_size_by_8) * FRU_BLOCK_SZ);
+				memcpy(new_area_offset, old_area_offset, length);
 				header.offsets[i] += change_size_by_8;
 			}
 		}
@@ -5282,9 +5291,9 @@ ipmi_fru_set_field_string_rebuild(struct ipmi_intf * intf, uint8_t fruId,
 			 * we have for the length of the FRU is the size of the FRU.
 			 */
 			uint32_t length = nearest_area - header.offset.internal;
-			int old_area_offset = fru_data_old + (header.offset.internal) * FRU_BLOCK_SZ;
-			int new_area_offset = fru_data_new + ((header.offset.internal + change_size_by_8) * FRU_BLOCK_SZ);
-			memcpy(old_area_offset, new_area_offset, length);
+			uint8_t *old_area_offset = fru_data_old + (header.offset.internal) * FRU_BLOCK_SZ;
+			uint8_t *new_area_offset = fru_data_new + ((header.offset.internal + change_size_by_8) * FRU_BLOCK_SZ);
+			memcpy(new_area_offset, old_area_offset, length);
 			header.offset.internal += change_size_by_8;
 		}
 
