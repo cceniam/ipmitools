@@ -1595,7 +1595,7 @@ ipmi_dcmi_prnt_get_temp_readings(struct ipmi_intf * intf)
 			continue;
 		}
 		/* Total number of available instances for the Entity ID */
-		offset = 0;
+		offset = 1;
 		tota_inst = rsp->data[1];
 		while (tota_inst > 0) {
 			get_inst = ((tota_inst / DCMI_MAX_BYTE_TEMP_READ_SIZE) ?
@@ -1603,7 +1603,7 @@ ipmi_dcmi_prnt_get_temp_readings(struct ipmi_intf * intf)
 			            (tota_inst % DCMI_MAX_BYTE_TEMP_READ_SIZE));
 			rsp = ipmi_dcmi_get_temp_readings(intf,
 			                                  dcmi_temp_read_vals[i].val,
-			                                  offset, 0);
+			                                  0, offset);
 			if (chk_rsp(rsp)) {
 				continue;
 			}

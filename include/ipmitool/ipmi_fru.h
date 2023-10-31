@@ -93,18 +93,20 @@ struct fru_header {
 #pragma pack(pop)
 #endif
 
-struct fru_area_chassis {
+struct fru_area_hdr_s {
 	uint8_t area_ver;
 	uint8_t type;
 	uint16_t area_len;
+};
+
+struct fru_area_chassis {
+	struct fru_area_hdr_s hdr;
 	char * part;
 	char * serial;
 };
 
 struct fru_area_board {
-	uint8_t area_ver;
-	uint8_t lang;
-	uint16_t area_len;
+	struct fru_area_hdr_s hdr;
 	uint32_t mfg_date_time;
 	char * mfg;
 	char * prod;
@@ -114,9 +116,7 @@ struct fru_area_board {
 };
 
 struct fru_area_product {
-	uint8_t area_ver;
-	uint8_t lang;
-	uint16_t area_len;
+	struct fru_area_hdr_s hdr;
 	char * mfg;
 	char * name;
 	char * part;
