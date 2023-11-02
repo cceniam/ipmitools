@@ -5007,8 +5007,8 @@ f_type, uint8_t f_index, char *f_string)
 		{
 			/* Fru area is padded to be 8 bytes aligned */
 			int new_raw_size = fru.size + change;
-			int new_raw_padded = new_raw_size + FRU_BLOCK_SZ - 1;
-			int new_block_count = new_raw_padded / FRU_BLOCK_SZ;
+			int new_padded_max = new_raw_size + FRU_BLOCK_SZ - 1;
+			int new_block_count = new_padded_max / FRU_BLOCK_SZ;
 			new_fru_size = new_block_count * FRU_BLOCK_SZ;
 		}
 		if (ipmi_fru_set_field_string_rebuild(intf, fruId, fru, header,
