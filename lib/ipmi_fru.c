@@ -5236,11 +5236,13 @@ ipmi_fru_set_field_string_rebuild(struct ipmi_intf * intf, uint8_t fruId,
 		 */
 		for (int i = 0; i < FRU_AREAS_COUNT; i++)
 		{
+			lprintf(LOG_DEBUG, "Area %i original offset: %i", i, header.offsets[i]);
 			/* Offset of zero means area does not exist.
 			 * Internal Use Area must be handled separately
 			 */
 			if (header.offsets[i] <= 0 || header.offsets[i] == header.offset.internal)
 			{
+				lprintf(LOG_DEBUG, "\n");
 				continue;
 			}
 			/* Internal Use Area length will be calculated by finding the closest area
@@ -5273,6 +5275,7 @@ ipmi_fru_set_field_string_rebuild(struct ipmi_intf * intf, uint8_t fruId,
 			}
 			if ((header.offsets[i] * FRU_BLOCK_SZ) > header_offset)
 			{
+				lprintf(LOG_DEBUG, "Area %i moving by %i blocks.", i, change_size_by_8);
 				uint32_t length = *(fru_data_old + (header.offsets[i] * FRU_BLOCK_SZ) + 1) * FRU_BLOCK_SZ;
 				/* MultiRecord Area length is third byte rather than second. */
 				if(header.offsets[i] == header.offset.multi)
@@ -5329,6 +5332,7 @@ ipmi_fru_set_field_string_rebuild(struct ipmi_intf * intf, uint8_t fruId,
 		{
 			end_of_fru += change_size_by_8 * 8;
 			int length_of_erase = change_size_by_8 * -1 * 8;
+			lprintf(LOG_DEBUG, "Erasing leftover data from %i to %i\n", end_of_fru, end_of_fru + length_of_erase);
 			memset(fru_data_new + end_of_fru, 0, length_of_erase);
 		}
 		/* Step 7 assumes fru.size is the size of the new FRU. */
