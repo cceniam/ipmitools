@@ -5187,30 +5187,29 @@ ipmi_fru_set_field_string_rebuild(struct ipmi_intf * intf, uint8_t fruId,
 
 	/*************************
 	5) Check if section must be resize.  This occur when padding length is not between 0 and 7 */
-	if( (padding_len < 0) || (padding_len >= 8))
+	if( (padding_len < 0) || (padding_len >= FRU_BLOCK_SZ))
 	{
-		uint32_t remaining_offset = ((header.offset.product * 8) + product_len);
-		int change_size_by_8;
+		uint32_t remaining_offset = ((header.offset.product * FRU_BLOCK_SZ) + product_len);
+		int change_block_cnt;
 
-		if(padding_len >= 8)
+		if(padding_len >= FRU_BLOCK_SZ)
 		{
 			/* Section must be set smaller */
-			change_size_by_8 = ((padding_len) / 8) * (-1);
+			change_block_cnt = ((padding_len) / FRU_BLOCK_SZ) * (-1);
 		}
 		else
 		{
 			/* Section must be set bigger */
-			change_size_by_8 = 1 + (((padding_len+1) / 8) * (-1));
+			change_block_cnt = 1 + (((padding_len+1) / FRU_BLOCK_SZ) * (-1));
 		}
 
 		/* Recalculate padding and section length base on the section changes */
-		fru_section_len += (change_size_by_8 * 8);
-		padding_len     += (change_size_by_8 * 8);
+		fru_section_len += (change_block_cnt * FRU_BLOCK_SZ);
+		padding_len     += (change_block_cnt * FRU_BLOCK_SZ);
 
 		#ifdef DBG_RESIZE_FRU
-		printf("change_size_by_8: %i\n", change_size_by_8);
+		printf("change_block_cnt: %i\n", change_block_cnt);
 		printf("New Padding Length: %i\n", padding_len);
-		printf("change_size_by_8: %i\n", change_size_by_8);
 		printf("header.offset.board: %i\n", header.offset.board);
 		#endif
 
@@ -5275,7 +5274,7 @@ ipmi_fru_set_field_string_rebuild(struct ipmi_intf * intf, uint8_t fruId,
 			}
 			if ((header.offsets[i] * FRU_BLOCK_SZ) > header_offset)
 			{
-				lprintf(LOG_DEBUG, "Area %i moving by %i blocks.", i, change_size_by_8);
+				lprintf(LOG_DEBUG, "Area %i moving by %i blocks.", i, change_block_cnt);
 				uint32_t length = *(fru_data_old + (header.offsets[i] * FRU_BLOCK_SZ) + 1) * FRU_BLOCK_SZ;
 				/* MultiRecord Area length is third byte rather than second. */
 				if(header.offsets[i] == header.offset.multi)
@@ -5283,9 +5282,9 @@ ipmi_fru_set_field_string_rebuild(struct ipmi_intf * intf, uint8_t fruId,
 					length = *(fru_data_old + (header.offsets[i] * FRU_BLOCK_SZ) + 2) * FRU_BLOCK_SZ;
 				}
 				uint8_t *old_area_offset = fru_data_old + (header.offsets[i]) * FRU_BLOCK_SZ;
-				uint8_t *new_area_offset = fru_data_new + ((header.offsets[i] + change_size_by_8) * FRU_BLOCK_SZ);
+				uint8_t *new_area_offset = fru_data_new + ((header.offsets[i] + change_block_cnt) * FRU_BLOCK_SZ);
 				memcpy(new_area_offset, old_area_offset, length);
-				header.offsets[i] += change_size_by_8;
+				header.offsets[i] += change_block_cnt;
 			}
 		}
 		if (internal_move)
@@ -5295,24 +5294,24 @@ ipmi_fru_set_field_string_rebuild(struct ipmi_intf * intf, uint8_t fruId,
 			 */
 			uint32_t length = nearest_area - header.offset.internal;
 			uint8_t *old_area_offset = fru_data_old + (header.offset.internal) * FRU_BLOCK_SZ;
-			uint8_t *new_area_offset = fru_data_new + ((header.offset.internal + change_size_by_8) * FRU_BLOCK_SZ);
+			uint8_t *new_area_offset = fru_data_new + ((header.offset.internal + change_block_cnt) * FRU_BLOCK_SZ);
 			memcpy(new_area_offset, old_area_offset, length);
-			header.offset.internal += change_size_by_8;
+			header.offset.internal += change_block_cnt;
 		}
 
 		/* Adjust length of the section */
 		if (f_type == 'c')
 		{
-			*(fru_data_new + chassis_offset + 1) += change_size_by_8;
+			*(fru_data_new + chassis_offset + 1) += change_block_cnt;
 		}
 		else if( f_type == 'b')
 		{
-			*(fru_data_new + board_offset + 1)   += change_size_by_8;
+			*(fru_data_new + board_offset + 1)   += change_block_cnt;
 		}
 		else if( f_type == 'p')
 		{
-			*(fru_data_new + product_offset + 1) += change_size_by_8;
-			product_len_new = *(fru_data_new + product_offset + 1) * 8;
+			*(fru_data_new + product_offset + 1) += change_block_cnt;
+			product_len_new = *(fru_data_new + product_offset + 1) * FRU_BLOCK_SZ;
 		}
 
 		/* Rebuild Header checksum */
@@ -5328,22 +5327,22 @@ ipmi_fru_set_field_string_rebuild(struct ipmi_intf * intf, uint8_t fruId,
 		}
 
 		/* If FRU has shrunk in size, zero-out any leftover data */
-		if (change_size_by_8 < 0)
+		if (change_block_cnt < 0)
 		{
-			end_of_fru += change_size_by_8 * 8;
-			int length_of_erase = change_size_by_8 * -1 * 8;
+			end_of_fru += change_block_cnt * FRU_BLOCK_SZ;
+			int length_of_erase = change_block_cnt * -1 * FRU_BLOCK_SZ;
 			lprintf(LOG_DEBUG, "Erasing leftover data from %i to %i\n", end_of_fru, end_of_fru + length_of_erase);
 			memset(fru_data_new + end_of_fru, 0, length_of_erase);
 		}
 		/* Step 7 assumes fru.size is the size of the new FRU. */
-		fru.size += (change_size_by_8 * 8);
+		fru.size += (change_block_cnt * FRU_BLOCK_SZ);
 	}
 
 	/* Update only if it's fits padding length as defined in the spec, otherwise, it's an internal
 	error */
 	/*************************
 	6) Update Field and sections */
-	if( (padding_len >=0) && (padding_len < 8))
+	if( (padding_len >=0) && (padding_len < FRU_BLOCK_SZ))
 	{
 		/* Do not requires any change in other section */
 
