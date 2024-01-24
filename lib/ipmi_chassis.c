@@ -1049,7 +1049,7 @@ get_bootparam_options(char *optstring,
 			optionError = 1;
 			break;
 		}
-		if (!strcmp(token, "no-")) {
+		if (strncmp(token, "no-", 3) == 0) {
 			setbit = 1;
 			token += 3;
 		}
