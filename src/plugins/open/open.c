@@ -94,7 +94,7 @@ ipmi_openipmi_open(struct ipmi_intf *intf)
 {
 	char ipmi_dev[16];
 	char ipmi_devfs[16];
-	char ipmi_devfs2[16];
+	char ipmi_devfs2[17];
 	int devnum = 0;
 
 	devnum = intf->devnum;
@@ -170,7 +170,7 @@ static
 struct ipmi_rs *
 ipmi_openipmi_send_cmd(struct ipmi_intf *intf, struct ipmi_rq *req)
 {
-	struct ipmi_recv recv = {};
+	struct ipmi_recv recv;
 	struct ipmi_addr addr;
 	struct ipmi_system_interface_addr bmc_addr = {
 		.addr_type = IPMI_SYSTEM_INTERFACE_ADDR_TYPE,
@@ -188,6 +188,7 @@ ipmi_openipmi_send_cmd(struct ipmi_intf *intf, struct ipmi_rq *req)
 	uint8_t *data = NULL;
 	int data_len = 0;
 	int retval = 0;
+	memset(&recv, 0, sizeof(recv));
 
 	if (!intf || !req)
 		return NULL;
