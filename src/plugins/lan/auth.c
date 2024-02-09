@@ -30,9 +30,7 @@
  * EVEN IF SUN HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
  */
 
-#include <stdlib.h>
 #include <stdio.h>
-#include <inttypes.h>
 #include <string.h>
 #include <sys/types.h>
 #include <unistd.h>
@@ -46,11 +44,11 @@
 # include <config.h>
 #endif
 
-#ifdef HAVE_CRYPTO_MD2
+#if HAVE_CRYPTO_MD2
 # include <openssl/md2.h>
 #endif
 
-#ifdef HAVE_CRYPTO_MD5
+#if HAVE_CRYPTO_MD5
 # include <openssl/md5.h>
 #else
 # include "md5.h"
@@ -64,7 +62,7 @@
  */
 uint8_t * ipmi_auth_md5(struct ipmi_session * s, uint8_t * data, int data_len)
 {
-#ifdef HAVE_CRYPTO_MD5
+#if HAVE_CRYPTO_MD5
 	MD5_CTX ctx;
 	static uint8_t md[16];
 	uint32_t temp;
@@ -119,7 +117,7 @@ uint8_t * ipmi_auth_md5(struct ipmi_session * s, uint8_t * data, int data_len)
 #endif /*HAVE_CRYPTO_MD5*/
 }
 
-#ifdef HAVE_CRYPTO_MD2
+#if HAVE_CRYPTO_MD2
   #define __MD2_ONLY__(x) x
 #else
   #define __MD2_ONLY__(x) __UNUSED__(x)
@@ -137,7 +135,7 @@ uint8_t * ipmi_auth_md2(
     uint8_t *__MD2_ONLY__(data),
     int __MD2_ONLY__(data_len))
 {
-#ifdef HAVE_CRYPTO_MD2
+#if HAVE_CRYPTO_MD2
 	MD2_CTX ctx;
 	static uint8_t md[16];
 	uint32_t temp;
@@ -174,7 +172,7 @@ uint8_t * ipmi_auth_md2(
 /* special authentication method */
 uint8_t * ipmi_auth_special(struct ipmi_session * s)
 {
-#ifdef HAVE_CRYPTO_MD5
+#if HAVE_CRYPTO_MD5
 	MD5_CTX ctx;
 	static uint8_t md[16];
 	uint8_t challenge[16];
@@ -210,7 +208,8 @@ uint8_t * ipmi_auth_special(struct ipmi_session * s)
 	memset(&state, 0, sizeof(md5_state_t));
 
 	md5_init(&state);
-	md5_append(&state, (const md5_byte_t *)s->authcode, strlen(s->authcode));
+	md5_append(&state, (const md5_byte_t *)s->authcode,
+		   strlen((const char *)s->authcode));
 	md5_finish(&state, digest);
 
 	for (i=0; i<16; i++)
