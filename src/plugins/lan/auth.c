@@ -44,11 +44,11 @@
 # include <config.h>
 #endif
 
-#if HAVE_CRYPTO_MD2
+#ifdef HAVE_CRYPTO_MD2
 # include <openssl/md2.h>
 #endif
 
-#if HAVE_CRYPTO_MD5
+#ifdef HAVE_CRYPTO_MD5
 # include <openssl/md5.h>
 #else
 # include "md5.h"
@@ -62,7 +62,7 @@
  */
 uint8_t * ipmi_auth_md5(struct ipmi_session * s, uint8_t * data, int data_len)
 {
-#if HAVE_CRYPTO_MD5
+#ifdef HAVE_CRYPTO_MD5
 	MD5_CTX ctx;
 	static uint8_t md[16];
 	uint32_t temp;
@@ -117,7 +117,7 @@ uint8_t * ipmi_auth_md5(struct ipmi_session * s, uint8_t * data, int data_len)
 #endif /*HAVE_CRYPTO_MD5*/
 }
 
-#if HAVE_CRYPTO_MD2
+#ifdef HAVE_CRYPTO_MD2
   #define __MD2_ONLY__(x) x
 #else
   #define __MD2_ONLY__(x) __UNUSED__(x)
@@ -135,7 +135,7 @@ uint8_t * ipmi_auth_md2(
     uint8_t *__MD2_ONLY__(data),
     int __MD2_ONLY__(data_len))
 {
-#if HAVE_CRYPTO_MD2
+#ifdef HAVE_CRYPTO_MD2
 	MD2_CTX ctx;
 	static uint8_t md[16];
 	uint32_t temp;
@@ -172,7 +172,7 @@ uint8_t * ipmi_auth_md2(
 /* special authentication method */
 uint8_t * ipmi_auth_special(struct ipmi_session * s)
 {
-#if HAVE_CRYPTO_MD5
+#ifdef HAVE_CRYPTO_MD5
 	MD5_CTX ctx;
 	static uint8_t md[16];
 	uint8_t challenge[16];
