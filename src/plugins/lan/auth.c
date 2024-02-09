@@ -209,7 +209,7 @@ uint8_t * ipmi_auth_special(struct ipmi_session * s)
 
 	md5_init(&state);
 	md5_append(&state, (const md5_byte_t *)s->authcode,
-		   strlen((const char *)s->authcode));
+	           strlen((const char *)s->authcode));
 	md5_finish(&state, digest);
 
 	for (i=0; i<16; i++)
