@@ -83,7 +83,7 @@
 
 #define WARNING_THRESHOLD	80
 #define DEFAULT_PIDFILE		_PATH_RUN "ipmievd.pid"
-char pidfile[64];
+static char pidfile[64];
 
 /* global variables */
 int verbose = 0;
@@ -422,11 +422,10 @@ static int
 openipmi_read(struct ipmi_event_intf * eintf)
 {
 	struct ipmi_addr addr;
-	struct ipmi_recv recv;
+	struct ipmi_recv recv = {};
 	uint8_t data[80];
 	int rv;
 
-	memset(&recv, 0, sizeof(struct ipmi_recv));
 	recv.addr = (unsigned char *) &addr;
 	recv.addr_len = sizeof(addr);
 	recv.msg.data = data;
@@ -733,7 +732,13 @@ ipmievd_main(struct ipmi_event_intf * eintf, int argc, char ** argv)
 		}
 		else if (strcasecmp(argv[i], "pidfile=") == 0) {
 			const char *pidArg = argv[i]+sizeof("pidfile=")-1;
-			size_t pidArgLen = strnlen(pidArg, sizeof(pidfile)-1);
+			size_t pidArgLen = strnlen(pidArg, sizeof(pidfile));
+			if (pidArgLen == sizeof(pidfile)) {
+				lprintf(LOG_ERR,
+					"The pidfile path is too long. It must be fewer than %d characters\n",
+					sizeof(pidfile) - 1);
+				return (-1);
+			}
 			memset(pidfile, 0, sizeof(pidfile));
 			strncpy(pidfile, pidArg, pidArgLen);
 		}
