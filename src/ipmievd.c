@@ -422,10 +422,11 @@ static int
 openipmi_read(struct ipmi_event_intf * eintf)
 {
 	struct ipmi_addr addr;
-	struct ipmi_recv recv = {};
+	struct ipmi_recv recv;
 	uint8_t data[80];
 	int rv;
 
+	memset(&recv, 0, sizeof(struct ipmi_recv));
 	recv.addr = (unsigned char *) &addr;
 	recv.addr_len = sizeof(addr);
 	recv.msg.data = data;
@@ -701,7 +702,7 @@ ipmievd_main(struct ipmi_event_intf * eintf, int argc, char ** argv)
 	int daemon = 1;
 	struct sigaction act;
 
-	memset(pidfile, 0, 64);
+	memset(pidfile, 0, sizeof(pidfile));
 	sprintf(pidfile, "%s%d", DEFAULT_PIDFILE, eintf->intf->devnum);
 
 	for (i = 0; i < argc; i++) {
@@ -731,9 +732,10 @@ ipmievd_main(struct ipmi_event_intf * eintf, int argc, char ** argv)
 			}
 		}
 		else if (strcasecmp(argv[i], "pidfile=") == 0) {
-			memset(pidfile, 0, 64);
-			strncpy(pidfile, argv[i]+8,
-				__min(strlen((const char *)(argv[i]+8)), 63));
+			const char *pidArg = argv[i]+sizeof("pidfile=")-1;
+			size_t pidArgLen = strnlen(pidArg, sizeof(pidfile)-1);
+			memset(pidfile, 0, sizeof(pidfile));
+			strncpy(pidfile, pidArg, pidArgLen);
 		}
 	}
 
