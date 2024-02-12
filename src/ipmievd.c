@@ -83,7 +83,8 @@
 
 #define WARNING_THRESHOLD	80
 #define DEFAULT_PIDFILE		_PATH_RUN "ipmievd.pid"
-#define PIDFILE_OPT_LEN (sizeof("pidfile=") - 1)
+#define PIDFILE_OPT "pidfile="
+#define PIDFILE_OPT_LEN (sizeof(PIDFILE_OPT) - 1)
 static char pidfile[64];
 
 /* global variables */
@@ -731,7 +732,7 @@ ipmievd_main(struct ipmi_event_intf * eintf, int argc, char ** argv)
 				return (-1);
 			}
 		}
-		else if (strcasecmp(argv[i], "pidfile=") == 0) {
+		else if (strcasecmp(argv[i], PIDFILE_OPT) == 0) {
 			const char *pidArg = argv[i]+PIDFILE_OPT_LEN;
 			size_t pidArgLen = strnlen(pidArg, sizeof(pidfile));
 			if (pidArgLen == sizeof(pidfile)) {
