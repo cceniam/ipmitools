@@ -36,7 +36,6 @@
 # include <config.h>
 #endif
 #include <ipmitool/ipmi.h>
-#include <ipmitool/ipmi_intf.h>
 
 #define EVENT_DIR_ASSERT	0
 #define EVENT_DIR_DEASSERT	1

@@ -32,10 +32,6 @@
 
 #pragma once
 
-#if HAVE_CONFIG_H
-#include <config.h>
-#endif
-
 #include <ipmitool/helper.h>
 #include "lan.h"
 

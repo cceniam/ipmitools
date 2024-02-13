@@ -5,7 +5,6 @@
 
 #pragma once
 
-#include <ipmitool/ipmi_intf.h>
 
 /* PICMG version */
 #define PICMG_CPCI_MAJOR_VERSION                   1

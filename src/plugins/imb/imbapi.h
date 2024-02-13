@@ -39,12 +39,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #ifndef	_WINDEFS_H
 #define	_WINDEFS_H
 
-#if HAVE_CONFIG_H
-#include <config.h>
-#endif
-
 #include <stddef.h>
-#include <ipmitool/ipmi.h>
 
 #ifndef FALSE
 #define FALSE   0

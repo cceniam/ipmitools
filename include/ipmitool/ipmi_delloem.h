@@ -33,7 +33,6 @@ POSSIBILITY OF SUCH DAMAGE.
 # include <config.h>
 #endif
 
-#include <ipmitool/ipmi_intf.h>
 
 #define MIN(a,b) ((a) < (b) ? (a) : (b))
 #define MAX(a,b) ((a) > (b) ? (a) : (b))

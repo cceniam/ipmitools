@@ -34,7 +34,6 @@
 
 #include <ipmitool/helper.h>
 #include "lanplus.h"
-#include <ipmitool/ipmi_intf.h>
 
 #define ASF_RMCP_IANA		0x000011be
 

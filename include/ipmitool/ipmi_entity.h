@@ -32,7 +32,6 @@
 
 #pragma once
 
-#include <stdint.h>
 
 #if HAVE_PRAGMA_PACK
 #pragma pack(push, 1)
