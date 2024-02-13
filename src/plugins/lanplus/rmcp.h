@@ -50,8 +50,8 @@
 #define RMCP_CLASS_OEM		0x08
 
 /* RMCP message header */
-#ifdef HAVE_PRAGMA_PACK
-#pragma pack(1)
+#if HAVE_PRAGMA_PACK
+#pragma pack(push, 1)
 #endif
 struct rmcp_hdr {
 	uint8_t ver;
@@ -59,8 +59,8 @@ struct rmcp_hdr {
 	uint8_t seq;
 	uint8_t class;
 } ATTRIBUTE_PACKING;
-#ifdef HAVE_PRAGMA_PACK
-#pragma pack(0)
+#if HAVE_PRAGMA_PACK
+#pragma pack(pop)
 #endif
 
 int handle_rmcp(struct ipmi_intf * intf, uint8_t * data, int data_len);

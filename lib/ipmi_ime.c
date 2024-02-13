@@ -128,8 +128,8 @@ typedef enum tImeUpdateType
 } tImeUpdateType;
 
 
-#ifdef HAVE_PRAGMA_PACK
-#pragma pack(1)
+#if HAVE_PRAGMA_PACK
+#pragma pack(push, 1)
 #endif
 typedef struct sImeStatus {
    uint8_t image_status;
@@ -140,19 +140,19 @@ typedef struct sImeStatus {
    uint8_t dependent_flag;
    uint8_t free_area_size[4];
 } ATTRIBUTE_PACKING tImeStatus ;
-#ifdef HAVE_PRAGMA_PACK
-#pragma pack(0)
+#if HAVE_PRAGMA_PACK
+#pragma pack(pop)
 #endif
 
-#ifdef HAVE_PRAGMA_PACK
-#pragma pack(1)
+#if HAVE_PRAGMA_PACK
+#pragma pack(push, 1)
 #endif
 typedef struct sImeCaps {
    uint8_t area_supported;
    uint8_t special_caps;
 } ATTRIBUTE_PACKING tImeCaps ;
-#ifdef HAVE_PRAGMA_PACK
-#pragma pack(0)
+#if HAVE_PRAGMA_PACK
+#pragma pack(pop)
 #endif
 
 

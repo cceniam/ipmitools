@@ -61,8 +61,8 @@ int ipmi_mc_main(struct ipmi_intf *, int, char **);
  * Response data from IPM Get Device ID Command (IPMI rev 1.5, section 17.1)
  * The following really apply to any IPM device, not just BMCs...
  */
-#ifdef HAVE_PRAGMA_PACK
-#pragma pack(1)
+#if HAVE_PRAGMA_PACK
+#pragma pack(push, 1)
 #endif
 struct ipm_devid_rsp {
 	uint8_t device_id;
@@ -75,8 +75,8 @@ struct ipm_devid_rsp {
 	uint8_t product_id[2];
 	uint8_t aux_fw_rev[4];
 } ATTRIBUTE_PACKING;
-#ifdef HAVE_PRAGMA_PACK
-#pragma pack(0)
+#if HAVE_PRAGMA_PACK
+#pragma pack(pop)
 #endif
 
 #define IPM_DEV_DEVICE_ID_SDR_MASK     (0x80)	/* 1 = provides SDRs      */
@@ -153,8 +153,8 @@ static inline bool is_guid_version_valid(guid_version_t ver)
 
 /* The structure follows IPMI v2.0, rev 1.1
  * See section 20.8 */
-#ifdef HAVE_PRAGMA_PACK
-#pragma pack(1)
+#if HAVE_PRAGMA_PACK
+#pragma pack(push, 1)
 #endif
 typedef struct {
 	uint8_t node[GUID_NODE_SZ]; /* Byte 0 is LSB */
@@ -169,14 +169,14 @@ typedef struct {
 	uint16_t time_mid; /* timestamp middle field */
 	uint32_t time_low; /* timestamp low field */
 } ATTRIBUTE_PACKING ipmi_guid_t;
-#ifdef HAVE_PRAGMA_PACK
-#pragma pack(0)
+#if HAVE_PRAGMA_PACK
+#pragma pack(pop)
 #endif
 
 /* The structure follows RFC4122 (section 4.1.2)
  * and SMBIOS v3.0.0 (section 7.2.1) */
-#ifdef HAVE_PRAGMA_PACK
-#pragma pack(1)
+#if HAVE_PRAGMA_PACK
+#pragma pack(push, 1)
 #endif
 typedef struct {
 	uint32_t time_low; /* timestamp low field */
@@ -191,8 +191,8 @@ typedef struct {
 	};
 	uint8_t node[GUID_NODE_SZ]; /* Byte 0 is MSB */
 } ATTRIBUTE_PACKING rfc_guid_t;
-#ifdef HAVE_PRAGMA_PACK
-#pragma pack(0)
+#if HAVE_PRAGMA_PACK
+#pragma pack(pop)
 #endif
 
 /* Parsed GUID structure */
@@ -228,15 +228,15 @@ ipmi_guid2str(char *str, const void *data, ipmi_guid_mode_t mode);
 
 int _ipmi_mc_get_guid(struct ipmi_intf *intf, ipmi_guid_t *guid);
 
-#ifdef HAVE_PRAGMA_PACK
-#pragma pack(1)
+#if HAVE_PRAGMA_PACK
+#pragma pack(push, 1)
 #endif
 struct ipm_selftest_rsp {
 	unsigned char code;
 	unsigned char test;
 } ATTRIBUTE_PACKING;
-#ifdef HAVE_PRAGMA_PACK
-#pragma pack(0)
+#if HAVE_PRAGMA_PACK
+#pragma pack(pop)
 #endif
 
 #define IPM_SFT_CODE_OK			0x55
@@ -254,8 +254,8 @@ struct ipm_selftest_rsp {
 #define IPM_SELFTEST_FW_BOOTBLOCK	0x02
 #define IPM_SELFTEST_FW_CORRUPTED	0x01
 
-#ifdef HAVE_PRAGMA_PACK
-#pragma pack(1)
+#if HAVE_PRAGMA_PACK
+#pragma pack(push, 1)
 #endif
 struct ipm_get_watchdog_rsp {
 	unsigned char use;
@@ -277,8 +277,8 @@ struct ipm_get_watchdog_rsp {
 		uint16_t pres_cnt_le;
 	};
 } ATTRIBUTE_PACKING;
-#ifdef HAVE_PRAGMA_PACK
-#pragma pack(0)
+#if HAVE_PRAGMA_PACK
+#pragma pack(pop)
 #endif
 
 #define IPM_WATCHDOG_RESET_ERROR	0x80

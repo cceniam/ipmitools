@@ -49,8 +49,8 @@ typedef enum {
 	P_ABLE,
 } flg_e;
 
-#ifdef HAVE_PRAGMA_PACK
-#pragma pack(1)
+#if HAVE_PRAGMA_PACK
+#pragma pack(push, 1)
 #endif
 struct pef_table_entry {
 #define PEF_CONFIG_ENABLED 0x80
@@ -93,8 +93,8 @@ struct pef_table_entry {
 	uint8_t event_data_3_compare_1;
 	uint8_t event_data_3_compare_2;
 } ATTRIBUTE_PACKING;
-#ifdef HAVE_PRAGMA_PACK
-#pragma pack(0)
+#if HAVE_PRAGMA_PACK
+#pragma pack(pop)
 #endif
 
 struct desc_map {						/* maps a description to a value/mask */
@@ -111,8 +111,8 @@ struct bit_desc_map {				/* description text container */
 };
 
 
-#ifdef HAVE_PRAGMA_PACK
-#pragma pack(1)
+#if HAVE_PRAGMA_PACK
+#pragma pack(push, 1)
 #endif
 struct pef_policy_entry {
 #define PEF_POLICY_ID_MASK 0xf0
@@ -133,13 +133,13 @@ struct pef_policy_entry {
 #define PEF_POLICY_EVENT_SPECIFIC 0x80
 	uint8_t alert_string_key;
 } ATTRIBUTE_PACKING;
-#ifdef HAVE_PRAGMA_PACK
-#pragma pack(0)
+#if HAVE_PRAGMA_PACK
+#pragma pack(pop)
 #endif
 
 
-#ifdef HAVE_PRAGMA_PACK
-#pragma pack(1)
+#if HAVE_PRAGMA_PACK
+#pragma pack(push, 1)
 #endif
 struct pef_cfgparm_selector {
 #define PEF_CFGPARM_ID_REVISION_ONLY_MASK 0x80
@@ -161,24 +161,24 @@ struct pef_cfgparm_selector {
 	uint8_t set;
 	uint8_t block;
 } ATTRIBUTE_PACKING;
-#ifdef HAVE_PRAGMA_PACK
-#pragma pack(0)
+#if HAVE_PRAGMA_PACK
+#pragma pack(pop)
 #endif
 
-#ifdef HAVE_PRAGMA_PACK
-#pragma pack(1)
+#if HAVE_PRAGMA_PACK
+#pragma pack(push, 1)
 #endif
 struct pef_cfgparm_set_in_progress {
 #define PEF_SET_IN_PROGRESS_COMMIT_WRITE 0x02 
 #define PEF_SET_IN_PROGRESS 0x01
 	uint8_t data1;
 } ATTRIBUTE_PACKING;
-#ifdef HAVE_PRAGMA_PACK
-#pragma pack(0)
+#if HAVE_PRAGMA_PACK
+#pragma pack(pop)
 #endif
 
-#ifdef HAVE_PRAGMA_PACK
-#pragma pack(1)
+#if HAVE_PRAGMA_PACK
+#pragma pack(push, 1)
 #endif
 struct pef_cfgparm_control {
 #define PEF_CONTROL_ENABLE_ALERT_STARTUP_DELAY 0x08
@@ -187,13 +187,13 @@ struct pef_cfgparm_control {
 #define PEF_CONTROL_ENABLE 0x01
 	uint8_t data1;
 } ATTRIBUTE_PACKING;
-#ifdef HAVE_PRAGMA_PACK
-#pragma pack(0)
+#if HAVE_PRAGMA_PACK
+#pragma pack(pop)
 #endif
 
 
-#ifdef HAVE_PRAGMA_PACK
-#pragma pack(1)
+#if HAVE_PRAGMA_PACK
+#pragma pack(push, 1)
 #endif
 struct pef_cfgparm_action {
 #define PEF_ACTION_ENABLE_DIAGNOSTIC_INTERRUPT 0x20
@@ -204,43 +204,43 @@ struct pef_cfgparm_action {
 #define PEF_ACTION_ENABLE_ALERT 0x01
 	uint8_t data1;
 } ATTRIBUTE_PACKING;
-#ifdef HAVE_PRAGMA_PACK
-#pragma pack(0)
+#if HAVE_PRAGMA_PACK
+#pragma pack(pop)
 #endif
 
-#ifdef HAVE_PRAGMA_PACK
-#pragma pack(1)
+#if HAVE_PRAGMA_PACK
+#pragma pack(push, 1)
 #endif
 struct pef_cfgparm_startup_delay {
 	uint8_t data1;
 } ATTRIBUTE_PACKING;
-#ifdef HAVE_PRAGMA_PACK
-#pragma pack(0)
+#if HAVE_PRAGMA_PACK
+#pragma pack(pop)
 #endif
 
-#ifdef HAVE_PRAGMA_PACK
-#pragma pack(1)
+#if HAVE_PRAGMA_PACK
+#pragma pack(push, 1)
 #endif
 struct pef_cfgparm_alert_startup_delay {
 	uint8_t data1;
 } ATTRIBUTE_PACKING;
-#ifdef HAVE_PRAGMA_PACK
-#pragma pack(0)
+#if HAVE_PRAGMA_PACK
+#pragma pack(pop)
 #endif
 
-#ifdef HAVE_PRAGMA_PACK
-#pragma pack(1)
+#if HAVE_PRAGMA_PACK
+#pragma pack(push, 1)
 #endif
 struct pef_cfgparm_filter_table_size {
 #define PEF_FILTER_TABLE_SIZE_MASK 0x7f
 	uint8_t data1;
 } ATTRIBUTE_PACKING;
-#ifdef HAVE_PRAGMA_PACK
-#pragma pack(0)
+#if HAVE_PRAGMA_PACK
+#pragma pack(pop)
 #endif
 
-#ifdef HAVE_PRAGMA_PACK
-#pragma pack(1)
+#if HAVE_PRAGMA_PACK
+#pragma pack(push, 1)
 #endif
 struct pef_cfgparm_filter_table_entry {
 # define PEF_FILTER_DISABLED 0x7F
@@ -249,69 +249,69 @@ struct pef_cfgparm_filter_table_entry {
 	uint8_t data1;
 	struct pef_table_entry entry;
 } ATTRIBUTE_PACKING;
-#ifdef HAVE_PRAGMA_PACK
-#pragma pack(0)
+#if HAVE_PRAGMA_PACK
+#pragma pack(pop)
 #endif
 
-#ifdef HAVE_PRAGMA_PACK
-#pragma pack(1)
+#if HAVE_PRAGMA_PACK
+#pragma pack(push, 1)
 #endif
 struct pef_cfgparm_filter_table_data_1 {
 	uint8_t id;
 	uint8_t cfg;
 } ATTRIBUTE_PACKING;
-#ifdef HAVE_PRAGMA_PACK
-#pragma pack(0)
+#if HAVE_PRAGMA_PACK
+#pragma pack(pop)
 #endif
 
-#ifdef HAVE_PRAGMA_PACK
-#pragma pack(1)
+#if HAVE_PRAGMA_PACK
+#pragma pack(push, 1)
 #endif
 struct pef_cfgparm_policy_table_size {
 #define PEF_POLICY_TABLE_SIZE_MASK 0x7f
 	uint8_t data1;
 } ATTRIBUTE_PACKING;
-#ifdef HAVE_PRAGMA_PACK
-#pragma pack(0)
+#if HAVE_PRAGMA_PACK
+#pragma pack(pop)
 #endif
 
-#ifdef HAVE_PRAGMA_PACK
-#pragma pack(1)
+#if HAVE_PRAGMA_PACK
+#pragma pack(push, 1)
 #endif
 struct pef_cfgparm_policy_table_entry {
 #define PEF_POLICY_TABLE_ID_MASK 0x7f
 	uint8_t data1;
 	struct pef_policy_entry entry;
 } ATTRIBUTE_PACKING;
-#ifdef HAVE_PRAGMA_PACK
-#pragma pack(0)
+#if HAVE_PRAGMA_PACK
+#pragma pack(pop)
 #endif
 
-#ifdef HAVE_PRAGMA_PACK
-#pragma pack(1)
+#if HAVE_PRAGMA_PACK
+#pragma pack(push, 1)
 #endif
 struct pef_cfgparm_system_guid {
 #define PEF_SYSTEM_GUID_USED_IN_PET 0x01
 	uint8_t data1;
 	uint8_t guid[16];
 } ATTRIBUTE_PACKING;
-#ifdef HAVE_PRAGMA_PACK
-#pragma pack(0)
+#if HAVE_PRAGMA_PACK
+#pragma pack(pop)
 #endif
 
-#ifdef HAVE_PRAGMA_PACK
-#pragma pack(1)
+#if HAVE_PRAGMA_PACK
+#pragma pack(push, 1)
 #endif
 struct pef_cfgparm_alert_string_table_size {
 #define PEF_ALERT_STRING_TABLE_SIZE_MASK 0x7f
 	uint8_t data1;
 } ATTRIBUTE_PACKING;
-#ifdef HAVE_PRAGMA_PACK
-#pragma pack(0)
+#if HAVE_PRAGMA_PACK
+#pragma pack(pop)
 #endif
 
-#ifdef HAVE_PRAGMA_PACK
-#pragma pack(1)
+#if HAVE_PRAGMA_PACK
+#pragma pack(push, 1)
 #endif
 struct pef_cfgparm_alert_string_keys {
 #define PEF_ALERT_STRING_ID_MASK 0x7f
@@ -321,25 +321,25 @@ struct pef_cfgparm_alert_string_keys {
 #define PEF_ALERT_STRING_SET_ID_MASK 0x7f
 	uint8_t data3;
 } ATTRIBUTE_PACKING;
-#ifdef HAVE_PRAGMA_PACK
-#pragma pack(0)
+#if HAVE_PRAGMA_PACK
+#pragma pack(pop)
 #endif
 
-#ifdef HAVE_PRAGMA_PACK
-#pragma pack(1)
+#if HAVE_PRAGMA_PACK
+#pragma pack(push, 1)
 #endif
 struct pef_cfgparm_alert_string_table_entry {
 	uint8_t id;
 	uint8_t blockno;
 	uint8_t block[16];
 } ATTRIBUTE_PACKING;
-#ifdef HAVE_PRAGMA_PACK
-#pragma pack(0)
+#if HAVE_PRAGMA_PACK
+#pragma pack(pop)
 #endif
 
 /* PEF - LAN */
-#ifdef HAVE_PRAGMA_PACK
-#pragma pack(1)
+#if HAVE_PRAGMA_PACK
+#pragma pack(push, 1)
 #endif
 struct pef_lan_cfgparm_selector {
 #define PEF_LAN_CFGPARM_CH_REVISION_ONLY_MASK 0x80
@@ -353,23 +353,23 @@ struct pef_lan_cfgparm_selector {
 	uint8_t set;
 	uint8_t block;
 } ATTRIBUTE_PACKING;
-#ifdef HAVE_PRAGMA_PACK
-#pragma pack(0)
+#if HAVE_PRAGMA_PACK
+#pragma pack(pop)
 #endif
 
-#ifdef HAVE_PRAGMA_PACK
-#pragma pack(1)
+#if HAVE_PRAGMA_PACK
+#pragma pack(push, 1)
 #endif
 struct pef_lan_cfgparm_dest_size {
 #define PEF_LAN_DEST_TABLE_SIZE_MASK 0x0f
 	uint8_t data1;
 } ATTRIBUTE_PACKING;
-#ifdef HAVE_PRAGMA_PACK
-#pragma pack(0)
+#if HAVE_PRAGMA_PACK
+#pragma pack(pop)
 #endif
 
-#ifdef HAVE_PRAGMA_PACK
-#pragma pack(1)
+#if HAVE_PRAGMA_PACK
+#pragma pack(push, 1)
 #endif
 struct pef_lan_cfgparm_dest_type {
 #define PEF_LAN_DEST_TYPE_ID_MASK 0x0f
@@ -384,13 +384,13 @@ struct pef_lan_cfgparm_dest_type {
 #define PEF_LAN_RETRIES_MASK 0x07
 	uint8_t retries;
 } ATTRIBUTE_PACKING;
-#ifdef HAVE_PRAGMA_PACK
-#pragma pack(0)
+#if HAVE_PRAGMA_PACK
+#pragma pack(pop)
 #endif
 
 
-#ifdef HAVE_PRAGMA_PACK
-#pragma pack(1)
+#if HAVE_PRAGMA_PACK
+#pragma pack(push, 1)
 #endif
 struct pef_lan_cfgparm_dest_info {
 #define PEF_LAN_DEST_MASK 0x0f
@@ -404,13 +404,13 @@ struct pef_lan_cfgparm_dest_info {
 	uint8_t ip[4];
 	uint8_t mac[6];
 } ATTRIBUTE_PACKING;
-#ifdef HAVE_PRAGMA_PACK
-#pragma pack(0)
+#if HAVE_PRAGMA_PACK
+#pragma pack(pop)
 #endif
 
 /* PEF - Serial/PPP */
-#ifdef HAVE_PRAGMA_PACK
-#pragma pack(1)
+#if HAVE_PRAGMA_PACK
+#pragma pack(push, 1)
 #endif
 struct pef_serial_cfgparm_selector {
 #define PEF_SERIAL_CFGPARM_CH_REVISION_ONLY_MASK 0x80
@@ -427,23 +427,23 @@ struct pef_serial_cfgparm_selector {
 	uint8_t set;
 	uint8_t block;
 } ATTRIBUTE_PACKING;
-#ifdef HAVE_PRAGMA_PACK
-#pragma pack(0)
+#if HAVE_PRAGMA_PACK
+#pragma pack(pop)
 #endif
 
-#ifdef HAVE_PRAGMA_PACK
-#pragma pack(1)
+#if HAVE_PRAGMA_PACK
+#pragma pack(push, 1)
 #endif
 struct pef_serial_cfgparm_dest_size {
 #define PEF_SERIAL_DEST_TABLE_SIZE_MASK 0x0f
 	uint8_t data1;
 } ATTRIBUTE_PACKING;
-#ifdef HAVE_PRAGMA_PACK
-#pragma pack(0)
+#if HAVE_PRAGMA_PACK
+#pragma pack(pop)
 #endif
 
-#ifdef HAVE_PRAGMA_PACK
-#pragma pack(1)
+#if HAVE_PRAGMA_PACK
+#pragma pack(push, 1)
 #endif
 struct pef_serial_cfgparm_dest_info {
 #define PEF_SERIAL_DEST_MASK 0x0f
@@ -474,24 +474,24 @@ struct pef_serial_cfgparm_dest_info {
 #define PEF_SERIAL_CALLBACK_ACCT_ID_MASK 0xf0
 	uint8_t data5;
 } ATTRIBUTE_PACKING;
-#ifdef HAVE_PRAGMA_PACK
-#pragma pack(0)
+#if HAVE_PRAGMA_PACK
+#pragma pack(pop)
 #endif
 
 
-#ifdef HAVE_PRAGMA_PACK
-#pragma pack(1)
+#if HAVE_PRAGMA_PACK
+#pragma pack(push, 1)
 #endif
 struct pef_serial_cfgparm_dial_string_count {
 #define PEF_SERIAL_DIAL_STRING_COUNT_MASK 0x0f
 	uint8_t data1;
 } ATTRIBUTE_PACKING;
-#ifdef HAVE_PRAGMA_PACK
-#pragma pack(0)
+#if HAVE_PRAGMA_PACK
+#pragma pack(pop)
 #endif
 
-#ifdef HAVE_PRAGMA_PACK
-#pragma pack(1)
+#if HAVE_PRAGMA_PACK
+#pragma pack(push, 1)
 #endif
 struct pef_serial_cfgparm_dial_string {
 #define PEF_SERIAL_DIAL_STRING_MASK 0x0f
@@ -499,23 +499,23 @@ struct pef_serial_cfgparm_dial_string {
 	uint8_t data2;
 	uint8_t data3;
 } ATTRIBUTE_PACKING;
-#ifdef HAVE_PRAGMA_PACK
-#pragma pack(0)
+#if HAVE_PRAGMA_PACK
+#pragma pack(pop)
 #endif
 
-#ifdef HAVE_PRAGMA_PACK
-#pragma pack(1)
+#if HAVE_PRAGMA_PACK
+#pragma pack(push, 1)
 #endif
 struct pef_serial_cfgparm_tap_acct_count {
 #define PEF_SERIAL_TAP_ACCT_COUNT_MASK 0x0f
 	uint8_t data1;
 } ATTRIBUTE_PACKING;
-#ifdef HAVE_PRAGMA_PACK
-#pragma pack(0)
+#if HAVE_PRAGMA_PACK
+#pragma pack(pop)
 #endif
 
-#ifdef HAVE_PRAGMA_PACK
-#pragma pack(1)
+#if HAVE_PRAGMA_PACK
+#pragma pack(push, 1)
 #endif
 struct pef_serial_cfgparm_tap_acct_info {
 	uint8_t data1;
@@ -524,12 +524,12 @@ struct pef_serial_cfgparm_tap_acct_info {
 #define PEF_SERIAL_TAP_ACCT_INFO_SVC_SETTINGS_ID_MASK 0x0f
 	uint8_t data2;
 } ATTRIBUTE_PACKING;
-#ifdef HAVE_PRAGMA_PACK
-#pragma pack(0)
+#if HAVE_PRAGMA_PACK
+#pragma pack(pop)
 #endif
 
-#ifdef HAVE_PRAGMA_PACK
-#pragma pack(1)
+#if HAVE_PRAGMA_PACK
+#pragma pack(push, 1)
 #endif
 struct pef_serial_cfgparm_tap_svc_settings {
 	uint8_t data1;
@@ -542,8 +542,8 @@ struct pef_serial_cfgparm_tap_svc_settings {
 	uint8_t timeout_parms[3];
 	uint8_t retry_parms[2];
 } ATTRIBUTE_PACKING;
-#ifdef HAVE_PRAGMA_PACK
-#pragma pack(0)
+#if HAVE_PRAGMA_PACK
+#pragma pack(pop)
 #endif
 
 

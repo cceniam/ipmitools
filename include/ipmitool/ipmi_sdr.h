@@ -103,8 +103,8 @@ enum {
 #define GET_SENSOR_READING	0x2d
 #define GET_SENSOR_TYPE		0x2f
 
-#ifdef HAVE_PRAGMA_PACK
-#pragma pack(1)
+#if HAVE_PRAGMA_PACK
+#pragma pack(push, 1)
 #endif
 struct sdr_repo_info_rs {
 	uint8_t version;	/* SDR version (51h) */
@@ -114,12 +114,12 @@ struct sdr_repo_info_rs {
 	uint32_t erase_stamp;	/* last del timestamp */
 	uint8_t op_support;	/* supported operations */
 } ATTRIBUTE_PACKING;
-#ifdef HAVE_PRAGMA_PACK
-#pragma pack(0)
+#if HAVE_PRAGMA_PACK
+#pragma pack(pop)
 #endif
 
-#ifdef HAVE_PRAGMA_PACK
-#pragma pack(1)
+#if HAVE_PRAGMA_PACK
+#pragma pack(push, 1)
 #endif
 /* builtin (device) sdrs support */
 struct sdr_device_info_rs {
@@ -127,24 +127,24 @@ struct sdr_device_info_rs {
 	unsigned char flags;	/* flags */
 	unsigned char popChangeInd[3];	/* free space in SDR */
 } ATTRIBUTE_PACKING;
-#ifdef HAVE_PRAGMA_PACK
-#pragma pack(0)
+#if HAVE_PRAGMA_PACK
+#pragma pack(pop)
 #endif
 
-#ifdef HAVE_PRAGMA_PACK
-#pragma pack(1)
+#if HAVE_PRAGMA_PACK
+#pragma pack(push, 1)
 #endif
 #define GET_SDR_RESERVE_REPO	0x22
 struct sdr_reserve_repo_rs {
 	uint16_t reserve_id;	/* reservation ID */
 } ATTRIBUTE_PACKING;
-#ifdef HAVE_PRAGMA_PACK
-#pragma pack(0)
+#if HAVE_PRAGMA_PACK
+#pragma pack(pop)
 #endif
 
 
-#ifdef HAVE_PRAGMA_PACK
-#pragma pack(1)
+#if HAVE_PRAGMA_PACK
+#pragma pack(push, 1)
 #endif
 #define GET_SDR		0x23
 struct sdr_get_rq {
@@ -154,12 +154,12 @@ struct sdr_get_rq {
 #define GET_SDR_ENTIRE_RECORD	0xff
 	uint8_t length;		/* length to read */
 } ATTRIBUTE_PACKING;
-#ifdef HAVE_PRAGMA_PACK
-#pragma pack(0)
+#if HAVE_PRAGMA_PACK
+#pragma pack(pop)
 #endif
 
-#ifdef HAVE_PRAGMA_PACK
-#pragma pack(1)
+#if HAVE_PRAGMA_PACK
+#pragma pack(push, 1)
 #endif
 struct sdr_get_rs {
 	uint16_t next;		/* next record id */
@@ -179,12 +179,12 @@ struct sdr_get_rs {
 	uint8_t type;		/* record type */
 	uint8_t length;		/* remaining record bytes */
 } ATTRIBUTE_PACKING;
-#ifdef HAVE_PRAGMA_PACK
-#pragma pack(0)
+#if HAVE_PRAGMA_PACK
+#pragma pack(pop)
 #endif
 
-#ifdef HAVE_PRAGMA_PACK
-#pragma pack(1)
+#if HAVE_PRAGMA_PACK
+#pragma pack(push, 1)
 #endif
 struct sdr_record_mask {
 	union {
@@ -313,12 +313,12 @@ struct sdr_record_mask {
 		} ATTRIBUTE_PACKING threshold;
 	} ATTRIBUTE_PACKING type;
 } ATTRIBUTE_PACKING;
-#ifdef HAVE_PRAGMA_PACK
-#pragma pack(0)
+#if HAVE_PRAGMA_PACK
+#pragma pack(pop)
 #endif
 
-#ifdef HAVE_PRAGMA_PACK
-#pragma pack(1)
+#if HAVE_PRAGMA_PACK
+#pragma pack(push, 1)
 #endif
 struct sdr_record_common_sensor {
 	struct {
@@ -427,12 +427,12 @@ struct sdr_record_common_sensor {
 #define IS_THRESHOLD_SENSOR(s)	((s)->event_type == 1)
 #define UNITS_ARE_DISCRETE(s)	((s)->unit.analog == 3)
 
-#ifdef HAVE_PRAGMA_PACK
-#pragma pack(0)
+#if HAVE_PRAGMA_PACK
+#pragma pack(pop)
 #endif
 
-#ifdef HAVE_PRAGMA_PACK
-#pragma pack(1)
+#if HAVE_PRAGMA_PACK
+#pragma pack(push, 1)
 #endif
 struct sdr_record_compact_sensor {
 	struct sdr_record_common_sensor cmn;
@@ -467,12 +467,12 @@ struct sdr_record_compact_sensor {
 	uint8_t id_code;	/* sensor ID string type/length code */
 	uint8_t id_string[16];	/* sensor ID string bytes, only if id_code != 0 */
 } ATTRIBUTE_PACKING;
-#ifdef HAVE_PRAGMA_PACK
-#pragma pack(0)
+#if HAVE_PRAGMA_PACK
+#pragma pack(pop)
 #endif
 
-#ifdef HAVE_PRAGMA_PACK
-#pragma pack(1)
+#if HAVE_PRAGMA_PACK
+#pragma pack(push, 1)
 #endif
 struct sdr_record_eventonly_sensor {
 	struct {
@@ -519,12 +519,12 @@ struct sdr_record_eventonly_sensor {
 	uint8_t id_string[16];	/* sensor ID string bytes, only if id_code != 0 */
 
 } ATTRIBUTE_PACKING;
-#ifdef HAVE_PRAGMA_PACK
-#pragma pack(0)
+#if HAVE_PRAGMA_PACK
+#pragma pack(pop)
 #endif
 
-#ifdef HAVE_PRAGMA_PACK
-#pragma pack(1)
+#if HAVE_PRAGMA_PACK
+#pragma pack(push, 1)
 #endif
 struct sdr_record_full_sensor {
 	struct sdr_record_common_sensor cmn;
@@ -588,12 +588,12 @@ struct sdr_record_full_sensor {
 	uint8_t id_code;	/* sensor ID string type/length code */
 	uint8_t id_string[16];	/* sensor ID string bytes, only if id_code != 0 */
 } ATTRIBUTE_PACKING;
-#ifdef HAVE_PRAGMA_PACK
-#pragma pack(0)
+#if HAVE_PRAGMA_PACK
+#pragma pack(pop)
 #endif
 
-#ifdef HAVE_PRAGMA_PACK
-#pragma pack(1)
+#if HAVE_PRAGMA_PACK
+#pragma pack(push, 1)
 #endif
 struct sdr_record_mc_locator {
 	uint8_t dev_slave_addr;
@@ -620,10 +620,13 @@ struct sdr_record_mc_locator {
 	uint8_t id_code;
 	uint8_t id_string[16];
 } ATTRIBUTE_PACKING;
-#ifdef HAVE_PRAGMA_PACK
-#pragma pack(0)
+#if HAVE_PRAGMA_PACK
+#pragma pack(pop)
 #endif
 
+#if HAVE_PRAGMA_PACK
+#pragma pack(push, 1)
+#endif
 struct sdr_record_fru_locator {
 	uint8_t dev_slave_addr;
 	uint8_t device_id;
@@ -653,12 +656,12 @@ struct sdr_record_fru_locator {
 	uint8_t id_code;
 	uint8_t id_string[16];
 } ATTRIBUTE_PACKING;
-#ifdef HAVE_PRAGMA_PACK
-#pragma pack(0)
+#if HAVE_PRAGMA_PACK
+#pragma pack(pop)
 #endif
 
-#ifdef HAVE_PRAGMA_PACK
-#pragma pack(1)
+#if HAVE_PRAGMA_PACK
+#pragma pack(push, 1)
 #endif
 struct sdr_record_generic_locator {
 	uint8_t dev_access_addr;
@@ -687,12 +690,12 @@ struct sdr_record_generic_locator {
 	uint8_t id_code;
 	uint8_t id_string[16];
 } ATTRIBUTE_PACKING;
-#ifdef HAVE_PRAGMA_PACK
-#pragma pack(0)
+#if HAVE_PRAGMA_PACK
+#pragma pack(pop)
 #endif
 
-#ifdef HAVE_PRAGMA_PACK
-#pragma pack(1)
+#if HAVE_PRAGMA_PACK
+#pragma pack(push, 1)
 #endif
 struct sdr_record_entity_assoc {
 	struct entity_id entity;	/* container entity ID and instance */
@@ -718,8 +721,8 @@ struct sdr_record_entity_assoc {
 	uint8_t entity_id_4;	/* entity ID 4    |  range 2 entity */
 	uint8_t entity_inst_4;	/* entity inst 4  |  range 2 last instance */
 } ATTRIBUTE_PACKING;
-#ifdef HAVE_PRAGMA_PACK
-#pragma pack(0)
+#if HAVE_PRAGMA_PACK
+#pragma pack(pop)
 #endif
 
 struct sdr_record_oem {
@@ -731,8 +734,8 @@ struct sdr_record_oem {
  * The Get SDR Repository Info response structure
  * From table 33-3 of the IPMI v2.0 spec
  */
-#ifdef HAVE_PRAGMA_PACK
-#pragma pack(1)
+#if HAVE_PRAGMA_PACK
+#pragma pack(push, 1)
 #endif
 struct get_sdr_repository_info_rsp {
 	uint8_t sdr_version;
@@ -759,8 +762,8 @@ struct get_sdr_repository_info_rsp {
 	uint8_t overflow_flag:1;
 #endif
 } ATTRIBUTE_PACKING;
-#ifdef HAVE_PRAGMA_PACK
-#pragma pack(0)
+#if HAVE_PRAGMA_PACK
+#pragma pack(pop)
 #endif
 
 struct ipmi_sdr_iterator {
@@ -770,8 +773,8 @@ struct ipmi_sdr_iterator {
 	int use_built_in;
 };
 
-#ifdef HAVE_PRAGMA_PACK
-#pragma pack(1)
+#if HAVE_PRAGMA_PACK
+#pragma pack(push, 1)
 #endif
 struct sdr_record_list {
 	uint16_t id;
@@ -792,8 +795,8 @@ struct sdr_record_list {
 		struct sdr_record_oem *oem;
 	} ATTRIBUTE_PACKING  record;
 } ATTRIBUTE_PACKING;
-#ifdef HAVE_PRAGMA_PACK
-#pragma pack(0)
+#if HAVE_PRAGMA_PACK
+#pragma pack(pop)
 #endif
 
 #define SENSOR_TYPE_MAX 0x2C

@@ -32,6 +32,10 @@
 
 #pragma once
 
+#if HAVE_CONFIG_H
+#include <config.h>
+#endif
+
 #include <ipmitool/helper.h>
 #include "lan.h"
 
@@ -41,8 +45,8 @@
 #define ASF_TYPE_PONG		0x40
 
 /* ASF message header */
-#ifdef HAVE_PRAGMA_PACK
-#pragma pack(1)
+#if HAVE_PRAGMA_PACK
+#pragma pack(push, 1)
 #endif
 struct asf_hdr {
 	uint32_t	iana;
@@ -51,8 +55,8 @@ struct asf_hdr {
 	uint8_t		__reserved;
 	uint8_t		len;
 } ATTRIBUTE_PACKING;
-#ifdef HAVE_PRAGMA_PACK
-#pragma pack(0)
+#if HAVE_PRAGMA_PACK
+#pragma pack(pop)
 #endif
 
 int handle_asf(struct ipmi_intf * intf, uint8_t * data, int data_len);

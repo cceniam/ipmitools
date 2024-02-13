@@ -35,15 +35,15 @@
 #if HAVE_CONFIG_H
 # include <config.h>
 #endif
-#include <ipmitool/ipmi.h>
+#include <ipmitool/ipmi_intf.h>
 
 #define IPMI_GET_SESSION_INFO 0x3D
 
 /*
  * From table 22.25 of the IPMIv2 specification
  */
-#ifdef HAVE_PRAGMA_PACK
-#pragma pack(1)
+#if HAVE_PRAGMA_PACK
+#pragma pack(push, 1)
 #endif
 struct get_session_info_rsp
 {
@@ -119,10 +119,8 @@ struct get_session_info_rsp
 		} modem_data;
 	} channel_data;
 } ATTRIBUTE_PACKING;
-#ifdef HAVE_PRAGMA_PACK
-#pragma pack(0)
+#if HAVE_PRAGMA_PACK
+#pragma pack(pop)
 #endif
-
-
 
 int ipmi_session_main(struct ipmi_intf *, int, char **);

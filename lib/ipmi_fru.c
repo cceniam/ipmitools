@@ -1738,8 +1738,8 @@ oem 15000 3 0 name instance FIELD1 FIELD2 FIELD3 crc32
 #define OEM_KONTRON_FIELD_SIZE          8
 #define OEM_KONTRON_VERSION_FIELD_SIZE 10
 
-#ifdef HAVE_PRAGMA_PACK
-#pragma pack(1)
+#if HAVE_PRAGMA_PACK
+#pragma pack(push, 1)
 #endif
 typedef struct OemKontronInformationRecordV0{
 	uint8_t field1TypeLength;
@@ -1750,14 +1750,14 @@ typedef struct OemKontronInformationRecordV0{
 	uint8_t field3[OEM_KONTRON_FIELD_SIZE];
 	uint8_t crcTypeLength;
 	uint8_t crc32[OEM_KONTRON_FIELD_SIZE];
-}tOemKontronInformationRecordV0;
-#ifdef HAVE_PRAGMA_PACK
-#pragma pack(0)
+} ATTRIBUTE_PACKING tOemKontronInformationRecordV0;
+#if HAVE_PRAGMA_PACK
+#pragma pack(pop)
 #endif
 
 
-#ifdef HAVE_PRAGMA_PACK
-#pragma pack(1)
+#if HAVE_PRAGMA_PACK
+#pragma pack(push, 1)
 #endif
 typedef struct OemKontronInformationRecordV1{
 	uint8_t field1TypeLength;
@@ -1768,9 +1768,9 @@ typedef struct OemKontronInformationRecordV1{
 	uint8_t field3[OEM_KONTRON_FIELD_SIZE];
 	uint8_t crcTypeLength;
 	uint8_t crc32[OEM_KONTRON_FIELD_SIZE];
-}tOemKontronInformationRecordV1;
-#ifdef HAVE_PRAGMA_PACK
-#pragma pack(0)
+} ATTRIBUTE_PACKING tOemKontronInformationRecordV1;
+#if HAVE_PRAGMA_PACK
+#pragma pack(pop)
 #endif
 
 /*

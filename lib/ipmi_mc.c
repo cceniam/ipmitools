@@ -103,8 +103,8 @@ ipmi_mc_reset(struct ipmi_intf * intf, int cmd)
 	return 0;
 }
 
-#ifdef HAVE_PRAGMA_PACK
-#pragma pack(1)
+#if HAVE_PRAGMA_PACK
+#pragma pack(push, 1)
 #endif
 struct bmc_enables_data {
 #if WORDS_BIGENDIAN
@@ -127,8 +127,8 @@ struct bmc_enables_data {
 	uint8_t oem2		: 1;
 #endif
 } ATTRIBUTE_PACKING;
-#ifdef HAVE_PRAGMA_PACK
-#pragma pack(0)
+#if HAVE_PRAGMA_PACK
+#pragma pack(pop)
 #endif
 
 struct bitfield_data {

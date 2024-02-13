@@ -964,7 +964,7 @@ ipmi_sunoem_sshkey_set(struct ipmi_intf * intf, uint8_t uid, char * ifile)
 #define SUNOEM_CLI_BUF_SIZE      (80 - SUNOEM_CLI_HEADER) /* Total 80 bytes */
 #define SUNOEM_CLI_MSG_SIZE(msg) (SUNOEM_CLI_HEADER + strlen((msg).buf) + 1)
 
-#ifdef HAVE_PRAGMA_PACK
+#if HAVE_PRAGMA_PACK
 #pragma pack(push, 1)
 #endif
 typedef struct
@@ -991,8 +991,8 @@ typedef struct
 	 * smaller if there's less data.
 	 */
 	char buf[SUNOEM_CLI_BUF_SIZE];
-}__attribute__((packed)) sunoem_cli_msg_t;
-#ifdef HAVE_PRAGMA_PACK
+} ATTRIBUTE_PACKING sunoem_cli_msg_t;
+#if HAVE_PRAGMA_PACK
 #pragma pack(pop)
 #endif
 
@@ -1298,15 +1298,15 @@ cleanup:
 }
 #define ECHO_DATA_SIZE 64
 
-#ifdef HAVE_PRAGMA_PACK
+#if HAVE_PRAGMA_PACK
 #pragma pack(push, 1)
 #endif
 typedef struct
 {
 	uint16_t seq_num;
 	unsigned char data[ECHO_DATA_SIZE];
-}__attribute__((packed)) sunoem_echo_msg_t;
-#ifdef HAVE_PRAGMA_PACK
+} ATTRIBUTE_PACKING sunoem_echo_msg_t;
+#if HAVE_PRAGMA_PACK
 #pragma pack(pop)
 #endif
 
@@ -1447,7 +1447,7 @@ ipmi_sunoem_echo(struct ipmi_intf * intf, int argc, char *argv[])
 	return (rc);
 } /* ipmi_sunoem_echo(...) */
 
-#ifdef HAVE_PRAGMA_PACK
+#if HAVE_PRAGMA_PACK
 #pragma pack(push, 1)
 #endif
 typedef struct
@@ -1471,8 +1471,8 @@ typedef struct
 	 *    } sunoem_version_response_t;
 	 */
 	unsigned char spare[15];
-}__attribute__((packed)) sunoem_version_response_t;
-#ifdef HAVE_PRAGMA_PACK
+} ATTRIBUTE_PACKING sunoem_version_response_t;
+#if HAVE_PRAGMA_PACK
 #pragma pack(pop)
 #endif
 
@@ -1592,15 +1592,15 @@ ipmi_sunoem_version(struct ipmi_intf * intf)
 #define LUAPI_MAX_OBJ_PATH_LEN 256
 #define LUAPI_MAX_OBJ_VAL_LEN 1024
 
-#ifdef HAVE_PRAGMA_PACK
+#if HAVE_PRAGMA_PACK
 #pragma pack(push, 1)
 #endif
 typedef struct
 {
 	unsigned char seq_num;
 	char nac_name[MAX_SUNOEM_NAC_SIZE];
-}__attribute__((packed)) sunoem_nacname_t;
-#ifdef HAVE_PRAGMA_PACK
+} ATTRIBUTE_PACKING sunoem_nacname_t;
+#if HAVE_PRAGMA_PACK
 #pragma pack(pop)
 #endif
 
@@ -1713,15 +1713,15 @@ ipmi_sunoem_nacname(struct ipmi_intf * intf, int argc, char *argv[])
 #define SUNOEM_LUAPI_TARGET 0
 #define SUNOEM_LUAPI_VALUE  1
 
-#ifdef HAVE_PRAGMA_PACK
+#if HAVE_PRAGMA_PACK
 #pragma pack(push, 1)
 #endif
 typedef struct
 {
 	unsigned char cmd_code;
 	unsigned char luapi_value[MAX_SUNOEM_VAL_PAYLOAD];
-}__attribute__((packed)) sunoem_getval_t;
-#ifdef HAVE_PRAGMA_PACK
+} ATTRIBUTE_PACKING sunoem_getval_t;
+#if HAVE_PRAGMA_PACK
 #pragma pack(pop)
 #endif
 
@@ -1738,7 +1738,7 @@ typedef struct
  *      or value is > MAX_SUNOEM_VAL_COMPACT_PAYLOAD
  * eof: If non zero, this is the last payload for the request
  */
-#ifdef HAVE_PRAGMA_PACK
+#if HAVE_PRAGMA_PACK
 #pragma pack(push, 1)
 #endif
 typedef struct
@@ -1748,8 +1748,8 @@ typedef struct
 	unsigned char tid;
 	unsigned char eof;
 	char luapi_data[MAX_SUNOEM_VAL_COMPACT_PAYLOAD];
-}__attribute__((packed)) sunoem_setval_t;
-#ifdef HAVE_PRAGMA_PACK
+} ATTRIBUTE_PACKING sunoem_setval_t;
+#if HAVE_PRAGMA_PACK
 #pragma pack(pop)
 #endif
 
@@ -1759,15 +1759,15 @@ typedef struct
  * status_code - see above for code definitions
  * tid - transaction ID - assigned ny the ILOM stack
  */
-#ifdef HAVE_PRAGMA_PACK
+#if HAVE_PRAGMA_PACK
 #pragma pack(push, 1)
 #endif
 typedef struct
 {
 	unsigned char status_code;
 	unsigned char tid;
-}__attribute__((packed)) sunoem_setval_resp_t;
-#ifdef HAVE_PRAGMA_PACK
+} ATTRIBUTE_PACKING sunoem_setval_resp_t;
+#if HAVE_PRAGMA_PACK
 #pragma pack(pop)
 #endif
 
@@ -2106,7 +2106,7 @@ ipmi_sunoem_setval(struct ipmi_intf * intf, int argc, char *argv[])
 #define MAX_FILEID_LEN                16
 #define CORE_TUNNEL_SUBCMD_GET_FILE   11
 
-#ifdef HAVE_PRAGMA_PACK
+#if HAVE_PRAGMA_PACK
 #pragma pack(push, 1)
 #endif
 typedef struct
@@ -2114,7 +2114,7 @@ typedef struct
 	unsigned char cmd_code;
 	unsigned char file_id[MAX_FILEID_LEN];
 	unsigned int block_num;
-}__attribute__((packed)) getfile_req_t;
+} ATTRIBUTE_PACKING getfile_req_t;
 
 typedef struct
 {
@@ -2122,8 +2122,8 @@ typedef struct
 	unsigned int data_size;
 	unsigned char eof;
 	unsigned char data[MAX_FILE_DATA_SIZE];
-}__attribute__((packed)) getfile_rsp_t;
-#ifdef HAVE_PRAGMA_PACK
+} ATTRIBUTE_PACKING getfile_rsp_t;
+#if HAVE_PRAGMA_PACK
 #pragma pack(pop)
 #endif
 
@@ -2240,20 +2240,20 @@ ipmi_sunoem_getfile(struct ipmi_intf * intf, int argc, char *argv[])
 #define CORE_TUNNEL_SUBCMD_GET_BEHAVIOR   15
 #define SUNOEM_BEHAVIORID_SIZE            32
 
-#ifdef HAVE_PRAGMA_PACK
+#if HAVE_PRAGMA_PACK
 #pragma pack(push, 1)
 #endif
 typedef struct
 {
 	unsigned char cmd_code;
 	unsigned char behavior_id[SUNOEM_BEHAVIORID_SIZE];
-}__attribute__((packed)) getbehavior_req_t;
+} ATTRIBUTE_PACKING getbehavior_req_t;
 
 typedef struct
 {
 	unsigned char enabled;
-}__attribute__((packed)) getbehavior_rsp_t;
-#ifdef HAVE_PRAGMA_PACK
+} ATTRIBUTE_PACKING getbehavior_rsp_t;
+#if HAVE_PRAGMA_PACK
 #pragma pack(pop)
 #endif
 

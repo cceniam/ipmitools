@@ -39,7 +39,12 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #ifndef	_WINDEFS_H
 #define	_WINDEFS_H
 
+#if HAVE_CONFIG_H
+#include <config.h>
+#endif
+
 #include <stddef.h>
+#include <ipmitool/ipmi.h>
 
 #ifndef FALSE
 #define FALSE   0
@@ -265,7 +270,9 @@ typedef struct {
 #define		SD_NO_ACTION				0
 #define		SD_RESET				1
 #define		SD_POWER_OFF				2
-#pragma pack(1)
+#if HAVE_PRAGMA_PACK
+#pragma pack(push, 1)
+#endif
 /*
  * This is the generic IMB packet format, the final checksum can't be
  * represented in this structure and will show up as the last data byte
@@ -278,7 +285,7 @@ typedef struct {
 	BYTE seqLn;
 	BYTE cmd;
 	BYTE data[1];
-} ImbPacket;
+} ATTRIBUTE_PACKING ImbPacket;
 #define MIN_IMB_PACKET_SIZE	7 	
 #define MAX_IMB_PACKET_SIZE	33
 /*
@@ -294,7 +301,7 @@ typedef struct {
 	BYTE cmd;
 	BYTE cCode;
 	BYTE data[1];
-} ImbRespPacket;
+} ATTRIBUTE_PACKING ImbRespPacket;
 #define MIN_IMB_RESPONSE_SIZE	7	/* min packet + completion code */
 #define MAX_IMB_RESPONSE_SIZE	MAX_IMB_PACKET_SIZE
 /************************
@@ -321,13 +328,13 @@ typedef struct {
 	BYTE rsLun;	
 	BYTE dataLength;
 	BYTE data[1];	
-} ImbRequest;
+} ATTRIBUTE_PACKING ImbRequest;
 typedef struct {
    DWORD	flags;			/* request flags*/
 #define NO_RESPONSE_EXPECTED	0x01	/*don't wait around for an IMB response*/
    DWORD	timeOut;		/* in uSec units*/
    ImbRequest	req;			/* message buffer*/
-} ImbRequestBuffer;
+} ATTRIBUTE_PACKING ImbRequestBuffer;
 #define MIN_IMB_REQ_BUF_SIZE	13	/* a buffer without any request data*/
 /************************
  *  ImbResponseBuffer
@@ -344,10 +351,12 @@ typedef struct {
 typedef struct {
 	BYTE       cCode;	
 	BYTE       data[1];	
-} ImbResponseBuffer;
+} ATTRIBUTE_PACKING ImbResponseBuffer;
 #define MIN_IMB_RESP_BUF_SIZE	1	
 #define MAX_IMB_RESP_SIZE		(MIN_IMB_RESP_BUF_SIZE + MAX_IMB_RESPONSE_SIZE)
-#pragma pack()
+#if HAVE_PRAGMA_PACK
+#pragma pack(pop)
+#endif
 /*
  * Async message access structures and types
  */
@@ -482,7 +491,9 @@ typedef enum {
 	ACCESN_INVALID_TRANSACTION,
 	ACCESN_TIMED_OUT
 } ACCESN_STATUS;
-#pragma pack(1)
+#if HAVE_PRAGMA_PACK
+#pragma pack(push, 1)
+#endif
 /*
  * Request structure provided to SendTimedImbpRequest()
 */
@@ -494,7 +505,7 @@ typedef struct {
 	unsigned char	rsLun;	
 	unsigned char *	data;	
 	int		dataLength;
-} IMBPREQUESTDATA;
+} ATTRIBUTE_PACKING IMBPREQUESTDATA;
 /*
  * Request structure provided to SendTimedI2cRequest()
 */
@@ -504,8 +515,10 @@ typedef struct {
 	unsigned char	numberOfBytesToRead;
 	unsigned char *	data;			
 	int		dataLength;	
-} I2CREQUESTDATA;
-#pragma pack()
+} ATTRIBUTE_PACKING I2CREQUESTDATA;
+#if HAVE_PRAGMA_PACK
+#pragma pack(pop)
+#endif
 /*#ifdef IMB_API
  *
  * This section is provided to be able to compile using imb_if.h
@@ -530,7 +543,9 @@ typedef enum _INTERFACE_TYPE
 } INTERFACE_TYPE, * PINTERFACE_TYPE;
 #ifdef WIN32
 /* From memIf.h */
-#pragma pack(1)
+#if HAVE_PRAGMA_PACK
+#pragma pack(push, 1)
+#endif
 typedef struct
 {
     INTERFACE_TYPE   InterfaceType; // Isa, Eisa, etc....
@@ -538,8 +553,10 @@ typedef struct
     PHYSICAL_ADDRESS BusAddress;    // Bus-relative address
     ULONG            AddressSpace;  // 0 is memory, 1 is I/O
     ULONG            Length;        // Length of section to map
-} PHYSICAL_MEMORY_INFO, * PPHYSICAL_MEMORY_INFO;
-#pragma pack()
+} ATTRIBUTE_PACKING PHYSICAL_MEMORY_INFO, * PPHYSICAL_MEMORY_INFO;
+#if HAVE_PRAGMA_PACK
+#pragma pack(pop)
+#endif
 #endif
 /*#else	// not IMB_API */
 /*

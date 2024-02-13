@@ -69,7 +69,7 @@ struct fru_info {
 	uint8_t max_write_size;
 };
 
-#ifdef HAVE_PRAGMA_PACK
+#if HAVE_PRAGMA_PACK
 #pragma pack(push, 1)
 #endif
 struct fru_header {
@@ -89,7 +89,7 @@ struct fru_header {
 	uint8_t checksum;
 } ATTRIBUTE_PACKING;
 #define FRU_AREAS_COUNT sizeof(((struct fru_header *)NULL)->offset)
-#ifdef HAVE_PRAGMA_PACK
+#if HAVE_PRAGMA_PACK
 #pragma pack(pop)
 #endif
 
@@ -126,8 +126,8 @@ struct fru_area_product {
 	char * fru;
 };
 
-#ifdef HAVE_PRAGMA_PACK
-#pragma pack(1)
+#if HAVE_PRAGMA_PACK
+#pragma pack(push, 1)
 #endif
 /* See Table 16-1 of "IPMI FRU Information Storage Specification" */
 struct fru_multirec_header {
@@ -146,12 +146,12 @@ struct fru_multirec_header {
 	uint8_t record_checksum;
 	uint8_t header_checksum;
 }ATTRIBUTE_PACKING;
-#ifdef HAVE_PRAGMA_PACK
-#pragma pack(0)
+#if HAVE_PRAGMA_PACK
+#pragma pack(pop)
 #endif
 
-#ifdef HAVE_PRAGMA_PACK
-#pragma pack(1)
+#if HAVE_PRAGMA_PACK
+#pragma pack(push, 1)
 #endif
 struct fru_multirec_powersupply {
 #if WORDS_BIGENDIAN
@@ -196,12 +196,12 @@ struct fru_multirec_powersupply {
 	uint16_t combined_capacity;
 	uint8_t rps_threshold;
 }ATTRIBUTE_PACKING;
-#ifdef HAVE_PRAGMA_PACK
-#pragma pack(0)
+#if HAVE_PRAGMA_PACK
+#pragma pack(pop)
 #endif
 
-#ifdef HAVE_PRAGMA_PACK
-#pragma pack(1)
+#if HAVE_PRAGMA_PACK
+#pragma pack(push, 1)
 #endif
 struct fru_multirec_dcoutput {
 #if WORDS_BIGENDIAN
@@ -220,12 +220,12 @@ struct fru_multirec_dcoutput {
 	uint16_t min_current;
 	uint16_t max_current;
 }ATTRIBUTE_PACKING;
-#ifdef HAVE_PRAGMA_PACK
-#pragma pack(0)
+#if HAVE_PRAGMA_PACK
+#pragma pack(pop)
 #endif
 
-#ifdef HAVE_PRAGMA_PACK
-#pragma pack(1)
+#if HAVE_PRAGMA_PACK
+#pragma pack(push, 1)
 #endif
 struct fru_multirec_dcload {
 #if WORDS_BIGENDIAN
@@ -242,11 +242,11 @@ struct fru_multirec_dcload {
 	uint16_t min_current;
 	uint16_t max_current;
 }ATTRIBUTE_PACKING;
-#ifdef HAVE_PRAGMA_PACK
-#pragma pack(0)
+#if HAVE_PRAGMA_PACK
+#pragma pack(pop)
 #endif
 
-#ifdef HAVE_PRAGMA_PACK
+#if HAVE_PRAGMA_PACK
 #pragma pack(push, 1)
 #endif
 /*
@@ -279,12 +279,12 @@ struct fru_multirec_mgmt {
 	uint8_t data[];
 } ATTRIBUTE_PACKING;
 
-#ifdef HAVE_PRAGMA_PACK
+#if HAVE_PRAGMA_PACK
 #pragma pack(pop)
 #endif
 
-#ifdef HAVE_PRAGMA_PACK
-#pragma pack(1)
+#if HAVE_PRAGMA_PACK
+#pragma pack(push, 1)
 #endif
 struct fru_multirec_oem_header {
 	unsigned char mfg_id[3];
@@ -316,22 +316,22 @@ struct fru_multirec_oem_header {
 	unsigned char record_id;
 	unsigned char record_version;
 }ATTRIBUTE_PACKING;
-#ifdef HAVE_PRAGMA_PACK
-#pragma pack(0)
+#if HAVE_PRAGMA_PACK
+#pragma pack(pop)
 #endif
 
-#ifdef HAVE_PRAGMA_PACK
-#pragma pack(1)
+#if HAVE_PRAGMA_PACK
+#pragma pack(push, 1)
 #endif
 struct fru_picmgext_guid {
 	unsigned char guid[16];
 }ATTRIBUTE_PACKING;
-#ifdef HAVE_PRAGMA_PACK
-#pragma pack(0)
+#if HAVE_PRAGMA_PACK
+#pragma pack(pop)
 #endif
 
-#ifdef HAVE_PRAGMA_PACK
-#pragma pack(1)
+#if HAVE_PRAGMA_PACK
+#pragma pack(push, 1)
 #endif
 struct fru_picmgext_link_desc {
 #ifndef WORDS_BIGENDIAN
@@ -362,8 +362,8 @@ struct fru_picmgext_link_desc {
 	unsigned int desig_channel:6;
 #endif
 }ATTRIBUTE_PACKING;
-#ifdef HAVE_PRAGMA_PACK
-#pragma pack(0)
+#if HAVE_PRAGMA_PACK
+#pragma pack(pop)
 #endif
 
 
@@ -376,19 +376,19 @@ struct fru_picmgext_link_desc {
 #define FRU_PICMGEXT_AMC_LINK_TYPE_RAPIDIO              0x06
 #define FRU_PICMGEXT_AMC_LINK_TYPE_STORAGE              0x07
 
-#ifdef HAVE_PRAGMA_PACK
-#pragma pack(1)
+#if HAVE_PRAGMA_PACK
+#pragma pack(push, 1)
 #endif
 /* This is used in command, not in FRU */
 struct fru_picmgext_amc_link_info {
    unsigned char linkInfo[3];
 }ATTRIBUTE_PACKING;
-#ifdef HAVE_PRAGMA_PACK
-#pragma pack(0)
+#if HAVE_PRAGMA_PACK
+#pragma pack(pop)
 #endif
 
-#ifdef HAVE_PRAGMA_PACK
-#pragma pack(1)
+#if HAVE_PRAGMA_PACK
+#pragma pack(push, 1)
 #endif
 struct fru_picmgext_amc_link_desc_core {
 #ifndef WORDS_BIGENDIAN
@@ -403,12 +403,12 @@ struct fru_picmgext_amc_link_desc_core {
 	unsigned int designator:12;
 #endif
 }ATTRIBUTE_PACKING;
-#ifdef HAVE_PRAGMA_PACK
-#pragma pack(0)
+#if HAVE_PRAGMA_PACK
+#pragma pack(pop)
 #endif
 
-#ifdef HAVE_PRAGMA_PACK
-#pragma pack(1)
+#if HAVE_PRAGMA_PACK
+#pragma pack(push, 1)
 #endif
 struct fru_picmgext_amc_link_desc_extra {
 #ifndef WORDS_BIGENDIAN
@@ -419,13 +419,13 @@ struct fru_picmgext_amc_link_desc_extra {
 	unsigned char asymetricMatch:2;
 #endif
 }ATTRIBUTE_PACKING;
-#ifdef HAVE_PRAGMA_PACK
-#pragma pack(0)
+#if HAVE_PRAGMA_PACK
+#pragma pack(pop)
 #endif
 
 
-#ifdef HAVE_PRAGMA_PACK
-#pragma pack(1)
+#if HAVE_PRAGMA_PACK
+#pragma pack(push, 1)
 #endif
 struct fru_picmgext_amc_link_desc {
 #ifndef WORDS_BIGENDIAN
@@ -436,8 +436,8 @@ struct fru_picmgext_amc_link_desc {
    struct fru_picmgext_amc_link_desc_core  core;/* lsb */
 #endif
 }ATTRIBUTE_PACKING;
-#ifdef HAVE_PRAGMA_PACK
-#pragma pack(0)
+#if HAVE_PRAGMA_PACK
+#pragma pack(pop)
 #endif
 
 
@@ -446,8 +446,8 @@ struct fru_picmgext_amc_link_desc {
 #define OEM_SWFW_FIELD_START_OFFSET 0x06
 
 #define FRU_PICMGEXT_CHN_DESC_RECORD_SIZE 3
-#ifdef HAVE_PRAGMA_PACK
-#pragma pack(1)
+#if HAVE_PRAGMA_PACK
+#pragma pack(push, 1)
 #endif
 struct fru_picmgext_chn_desc {
 #ifndef WORDS_BIGENDIAN
@@ -462,20 +462,20 @@ struct fru_picmgext_chn_desc {
 	unsigned int remote_slot:8;
 #endif
 }ATTRIBUTE_PACKING;
-#ifdef HAVE_PRAGMA_PACK
-#pragma pack(0)
+#if HAVE_PRAGMA_PACK
+#pragma pack(pop)
 #endif
 
-#ifdef HAVE_PRAGMA_PACK
-#pragma pack(1)
+#if HAVE_PRAGMA_PACK
+#pragma pack(push, 1)
 #endif
 struct fru_picmgext_slot_desc {
 	unsigned char chan_type;
 	unsigned char slot_addr;
 	unsigned char chn_count;
 }ATTRIBUTE_PACKING;
-#ifdef HAVE_PRAGMA_PACK
-#pragma pack(0)
+#if HAVE_PRAGMA_PACK
+#pragma pack(pop)
 #endif
 
 #define FRU_PICMGEXT_DESIGN_IF_BASE				0x00
@@ -483,43 +483,43 @@ struct fru_picmgext_slot_desc {
 #define FRU_PICMGEXT_DESIGN_IF_UPDATE_CHANNEL	0x02
 #define FRU_PICMGEXT_DESIGN_IF_RESERVED			0x03
 
-#ifdef HAVE_PRAGMA_PACK
-#pragma pack(1)
+#if HAVE_PRAGMA_PACK
+#pragma pack(push, 1)
 #endif
 struct fru_picmgext_carrier_activation_record {
 	unsigned short max_internal_curr;
 	unsigned char  allowance_for_readiness;
    unsigned char  module_activation_record_count;
 }ATTRIBUTE_PACKING;
-#ifdef HAVE_PRAGMA_PACK
-#pragma pack(0)
+#if HAVE_PRAGMA_PACK
+#pragma pack(pop)
 #endif
 
-#ifdef HAVE_PRAGMA_PACK
-#pragma pack(1)
+#if HAVE_PRAGMA_PACK
+#pragma pack(push, 1)
 #endif
 struct fru_picmgext_activation_record {
 	unsigned char ibmb_addr;
 	unsigned char max_module_curr;
 	unsigned char reserved;
 }ATTRIBUTE_PACKING;
-#ifdef HAVE_PRAGMA_PACK
-#pragma pack(0)
+#if HAVE_PRAGMA_PACK
+#pragma pack(pop)
 #endif
 
-#ifdef HAVE_PRAGMA_PACK
-#pragma pack(1)
+#if HAVE_PRAGMA_PACK
+#pragma pack(push, 1)
 #endif
 struct fru_picmgext_carrier_p2p_record {
 	unsigned char resource_id;
 	unsigned char p2p_count;
 }ATTRIBUTE_PACKING;
-#ifdef HAVE_PRAGMA_PACK
-#pragma pack(0)
+#if HAVE_PRAGMA_PACK
+#pragma pack(pop)
 #endif
 
-#ifdef HAVE_PRAGMA_PACK
-#pragma pack(1)
+#if HAVE_PRAGMA_PACK
+#pragma pack(push, 1)
 #endif
 struct fru_picmgext_carrier_p2p_descriptor {
 #ifndef WORDS_BIGENDIAN
@@ -534,12 +534,12 @@ struct fru_picmgext_carrier_p2p_descriptor {
 	unsigned char  remote_resource_id;
 #endif
 }ATTRIBUTE_PACKING;
-#ifdef HAVE_PRAGMA_PACK
-#pragma pack(0)
+#if HAVE_PRAGMA_PACK
+#pragma pack(pop)
 #endif
 
-#ifdef HAVE_PRAGMA_PACK
-#pragma pack(1)
+#if HAVE_PRAGMA_PACK
+#pragma pack(push, 1)
 #endif
 struct fru_picmgext_amc_p2p_record {
 #ifndef WORDS_BIGENDIAN
@@ -552,13 +552,13 @@ struct fru_picmgext_amc_p2p_record {
 	unsigned char resource_id         :4;
 #endif 
 }ATTRIBUTE_PACKING;
-#ifdef HAVE_PRAGMA_PACK
-#pragma pack(0)
+#if HAVE_PRAGMA_PACK
+#pragma pack(pop)
 #endif
 
 #define FRU_PICMGEXT_AMC_CHANNEL_DESC_RECORD_SIZE 3
-#ifdef HAVE_PRAGMA_PACK
-#pragma pack(1)
+#if HAVE_PRAGMA_PACK
+#pragma pack(push, 1)
 #endif
 struct fru_picmgext_amc_channel_desc_record {
 #ifndef WORDS_BIGENDIAN
@@ -575,13 +575,13 @@ struct fru_picmgext_amc_channel_desc_record {
 	unsigned int lane0port           :5;
 #endif 
 }ATTRIBUTE_PACKING;
-#ifdef HAVE_PRAGMA_PACK
-#pragma pack(0)
+#if HAVE_PRAGMA_PACK
+#pragma pack(pop)
 #endif
 
 #define FRU_PICMGEXT_AMC_LINK_DESC_RECORD_SIZE 5
-#ifdef HAVE_PRAGMA_PACK
-#pragma pack(1)
+#if HAVE_PRAGMA_PACK
+#pragma pack(push, 1)
 #endif
 struct fru_picmgext_amc_link_desc_record {
 	#define FRU_PICMGEXT_AMC_LINK_TYPE_PCIE		0x02
@@ -627,8 +627,8 @@ struct fru_picmgext_amc_link_desc_record {
 	unsigned int asym_match          :2;
 #endif 
 }ATTRIBUTE_PACKING;
-#ifdef HAVE_PRAGMA_PACK
-#pragma pack(0)
+#if HAVE_PRAGMA_PACK
+#pragma pack(pop)
 #endif
 
 /* IPMI Return codes for Get FRU Inventory Area and Write FRU Inventory Area */

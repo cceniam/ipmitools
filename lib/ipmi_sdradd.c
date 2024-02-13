@@ -53,8 +53,8 @@
 
 #define ADD_PARTIAL_SDR 0x25
 
-#ifdef HAVE_PRAGMA_PACK
-#pragma pack(1)
+#if HAVE_PRAGMA_PACK
+#pragma pack(push, 1)
 #endif
 struct sdr_add_rq {
   uint16_t reserve_id;  /* reservation ID */
@@ -65,8 +65,8 @@ struct sdr_add_rq {
 #define LAST_RECORD (1)
   uint8_t data[1];      /* SDR record data */
 } ATTRIBUTE_PACKING;
-#ifdef HAVE_PRAGMA_PACK
-#pragma pack(0)
+#if HAVE_PRAGMA_PACK
+#pragma pack(pop)
 #endif
 
 /* This was formerly initialized to 24, reduced this to 19 so the overall

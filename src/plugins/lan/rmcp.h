@@ -50,8 +50,8 @@
 #define RMCP_CLASS_IPMI		0x07
 #define RMCP_CLASS_OEM		0x08
 
-#ifdef HAVE_PRAGMA_PACK
-#pragma pack(1)
+#if HAVE_PRAGMA_PACK
+#pragma pack(push, 1)
 #endif
 /* RMCP message header */
 struct rmcp_hdr {
@@ -60,12 +60,12 @@ struct rmcp_hdr {
 	uint8_t seq;
 	uint8_t class;
 } ATTRIBUTE_PACKING;
-#ifdef HAVE_PRAGMA_PACK
-#pragma pack(0)
+#if HAVE_PRAGMA_PACK
+#pragma pack(pop)
 #endif
 
-#ifdef HAVE_PRAGMA_PACK
-#pragma pack(1)
+#if HAVE_PRAGMA_PACK
+#pragma pack(push, 1)
 #endif
 struct rmcp_pong {
 	struct rmcp_hdr rmcp;
@@ -76,8 +76,8 @@ struct rmcp_pong {
 	uint8_t sup_interact;
 	uint8_t reserved[6];
 } ATTRIBUTE_PACKING;
-#ifdef HAVE_PRAGMA_PACK
-#pragma pack(0)
+#if HAVE_PRAGMA_PACK
+#pragma pack(pop)
 #endif
 
 int handle_rmcp(struct ipmi_intf * intf, uint8_t * data, int data_len);

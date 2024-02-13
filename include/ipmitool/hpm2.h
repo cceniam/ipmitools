@@ -54,11 +54,10 @@
 #define HPM2_CAPS_VERSION_SENSOR	0x08
 #define HPM2_CAPS_DYNAMIC_SESSIONS	0x10
 
-#if HAVE_PRAGMA_PACK
-# pragma pack(push, 1)
-#endif
-
 /* HPM.2 LAN attach capabilities */
+#if HAVE_PRAGMA_PACK
+#pragma pack(push, 1)
+#endif
 struct hpm2_lan_attach_capabilities {
 	uint8_t hpm2_revision_id;
 	uint16_t lan_channel_mask;
@@ -68,8 +67,14 @@ struct hpm2_lan_attach_capabilities {
 	uint8_t hpm2_sol_params_start;
 	uint8_t hpm2_sol_params_rev;
 } ATTRIBUTE_PACKING;
+#if HAVE_PRAGMA_PACK
+#pragma pack(pop)
+#endif
 
 /* HPM.2 LAN channel capabilities */
+#if HAVE_PRAGMA_PACK
+#pragma pack(push, 1)
+#endif
 struct hpm2_lan_channel_capabilities {
 	uint8_t capabilities;
 	uint8_t attach_type;
@@ -77,9 +82,8 @@ struct hpm2_lan_channel_capabilities {
 	uint16_t max_inbound_pld_size;
 	uint16_t max_outbound_pld_size;
 } ATTRIBUTE_PACKING;
-
 #if HAVE_PRAGMA_PACK
-# pragma pack(pop)
+#pragma pack(pop)
 #endif
 
 /* HPM.2 command assignments */
