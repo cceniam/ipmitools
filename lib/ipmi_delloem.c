@@ -2824,7 +2824,6 @@ ipmi_powermgmt(struct ipmi_intf * intf)
 
 	remainder = (cumReading % 1000);
 	cumReading = cumReading / 1000;
-	remainder = (remainder + 50) / 100;
 
 	ampReadingRemainder = ampReading % 10;
 	ampReading = ampReading / 10;
