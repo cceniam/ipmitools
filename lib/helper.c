@@ -136,7 +136,7 @@ buf2str(const uint8_t *buf, int len)
 }
 
 /* ipmi_parse_hex - convert hexadecimal numbers to ascii string
- *                  Input string must be composed of two-characer
+ *                  Input string must be composed of two-character
  *                  hexadecimal numbers.
  *                  There is no separator between the numbers. Each number
  *                  results in one byte of the converted string.

@@ -713,7 +713,7 @@ if test "x"`eval "echo \\\${xenable_intf_${DEFAULT_INTF}}"` != "xyes"; then
 fi
 
 AC_ARG_VAR(IANADIR, [Configure the path to IANA PEN dictionary (default=DATAROOTDIR/misc)])
-AC_ARG_VAR(IANAUSERDIR, [Configure the path to IANA PEN dictionary wihtin the user's HOME directory (default=.local/usr/share/misc)])
+AC_ARG_VAR(IANAUSERDIR, [Configure the path to IANA PEN dictionary within the user's HOME directory (default=.local/usr/share/misc)])
 
 if test "x${IANADIR}" = "x"; then
 	IANADIR=`eval echo "${datarootdir}/misc"`

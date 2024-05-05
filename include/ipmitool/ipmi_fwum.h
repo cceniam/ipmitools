@@ -94,11 +94,11 @@ typedef enum eKFWUM_DownloadType
 	KFWUM_DOWNLOAD_TYPE_SEQUENCE,
 } tKFWUM_DownloadType;
 
-typedef enum eKFWUM_DownloadBuffferType
+typedef enum eKFWUM_DownloadBufferType
 {
 	KFWUM_SMALL_BUFFER_TYPE = 0,
 	KFUMW_BIG_BUFFER_TYPE
-} tKFWUM_DownloadBuffferType;
+} tKFWUM_DownloadBufferType;
 
 typedef struct sKFWUM_InFirmwareInfo
 {

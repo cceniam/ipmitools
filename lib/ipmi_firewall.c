@@ -203,7 +203,7 @@ ipmi_firewall_parse_args(int argc, char ** argv, struct ipmi_function_params * p
 	return 0;
 }
 
-/* _get_netfn_suport
+/* _get_netfn_support
  *
  * @intf:	ipmi interface
  * @channel:	ipmi channel
@@ -223,7 +223,7 @@ _get_netfn_support(struct ipmi_intf * intf, int channel, unsigned char * lun, un
 	unsigned int l;
 
 	if (!lun || !netfn) {
-		lprintf(LOG_ERR, "_get_netfn_suport: lun or netfn is NULL");
+		lprintf(LOG_ERR, "_get_netfn_support: lun or netfn is NULL");
 		return -1;
 	}
 
@@ -256,7 +256,7 @@ _get_netfn_support(struct ipmi_intf * intf, int channel, unsigned char * lun, un
 	return 0;
 }
 
-/* _get_command_suport
+/* _get_command_support
  *
  * @intf:	ipmi interface
  * @p:		a pointer to a struct ipmi_function_params
@@ -275,7 +275,7 @@ _get_command_support(struct ipmi_intf * intf,
 	unsigned int c;
 
 	if (!p || !lnfn) {
-		lprintf(LOG_ERR, "_get_netfn_suport: p or lnfn is NULL");
+		lprintf(LOG_ERR, "_get_netfn_support: p or lnfn is NULL");
 		return -1;
 	}
 

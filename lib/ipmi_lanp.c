@@ -75,7 +75,7 @@ static struct lan_param {
 	{ IPMI_LANP_PRI_RMCP_PORT,	2,	"Primary RMCP Port", NULL, 0 },
 	{ IPMI_LANP_SEC_RMCP_PORT,	2,	"Secondary RMCP Port", NULL, 0 },
 	{ IPMI_LANP_BMC_ARP,		1,	"BMC ARP Control", NULL, 0}, /* 10 */
-	{ IPMI_LANP_GRAT_ARP,		1,	"Gratituous ARP Intrvl", NULL, 0 },
+	{ IPMI_LANP_GRAT_ARP,		1,	"Gratuitous ARP Intrvl", NULL, 0 },
 	{ IPMI_LANP_DEF_GATEWAY_IP,	4,	"Default Gateway IP", NULL, 0 },
 	{ IPMI_LANP_DEF_GATEWAY_MAC,	6,	"Default Gateway MAC", NULL, 0 },
 	{ IPMI_LANP_BAK_GATEWAY_IP,	4,	"Backup Gateway IP", NULL, 0 },

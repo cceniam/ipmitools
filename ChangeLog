@@ -35,7 +35,7 @@ version 1.8.19 2022-08-31
 	* Convert line endings to LF
 	* Fixed compiler warning.
 	* RPM support: fixed broken build due to use of headers from kernel
-	* imbapi: replace __FUNCTION__ to eleminate compiler warnings
+	* imbapi: replace __FUNCTION__ to eliminate compiler warnings
 	* lanplus: remove unused variable
 	* hpmfwupg: Clean up / refactor
 	* fru: Fix crashes on 6-bit ASCII strings
@@ -426,7 +426,7 @@ version 1.8.16 2015-11-22
 	* ID:320 - Add VITA 46.11 support
 	* ID:333 - Set read timeout to 15s in OpenIPMI interface
 	* ID:336 - ipmitool does not fall back to IPv4 for IPMI v2 / RMCP+ sessions
-	* ID:343 - Print actual sensor thresholds in 'sensors' comand
+	* ID:343 - Print actual sensor thresholds in 'sensors' command
 	* ID:343 - Remove AC_FUNC_MALLOC
 	* ID:344 - Fix HPM.2 long message support
 	* ID:345 - Do not do several close session retries when catching SIGINT
@@ -567,7 +567,7 @@ version 1.8.14 2014-05-05
 	* ID: 48 - Remove hard-coded FRU inventory access length restriction
 	* ID: 276 - HPM.1 upgrade combined patch
 	* ID: 90 - Add options to chassis bootparam set bootflag
-	* ID: 292 -Properly handle plugin non-zero target adddress with -t
+	* ID: 292 -Properly handle plugin non-zero target address with -t
 	* Numerous Fixes based on running Coverity
 	* Use TIOCFLUSH if TCFLSH is missing to get the serial plugin building on
 	  Hurd.
@@ -577,7 +577,7 @@ version 1.8.14 2014-05-05
 	  platforms supporting it.  Fixes build problem on Hurd and FreeBSD.
 	* PA: 83 -  Revised IPv6 patch
 	* FR: 24 -  Exchange OS Name Hostname BMC URL during startup
-	* ID: 304 - Incorect byteswap in SOL maximum payload
+	* ID: 304 - Incorrect byteswap in SOL maximum payload
 	* ID: 303 - Fix build error in HPM.2 code
 	* ID: 300 - new sunoem functionality
 	* ID: 144 - Fix 'dcmi power set_limit action <value>'
@@ -728,7 +728,7 @@ version 1.8.12 released 2012-08-09
 	* Document the ipmitool dcmi commands in the ipmitool man page
 	* Document that some commands are blocked by OpenIPMI.   ID 2962306
 	* Document the -N and -R options per tracker ID 3489643
-	* fix manpage misdocumentation on cipher suite privilige configuration
+	* fix manpage misdocumentation on cipher suite privilege configuration
 	* Add build support for Dell OEM commands
 	* Add new Dell OEM commands and update man page
 	* added hpm and fwum in man page
@@ -745,7 +745,7 @@ version 1.8.12 released 2012-08-09
 		Dell servers.  Support for virtual mac is also implemented.
 	* Use consistent netfn/cmd for getsysinfo command
 	* Add Dell OEM network commands
-	* Resolve incorect Board Mfg Data due to incorrect date constant
+	* Resolve incorrect Board Mfg Data due to incorrect date constant
 	* Update ipmi_fru.h to SMBIOS spec 2.6.1 - ID 2916398
 	* Support for analog readings in discrete sensors on HP platforms.
 	* Change device id mask (IPM_DEV_DEVICE_ID_REV_MASK) 0x07 for 0x0F.
@@ -757,7 +757,7 @@ version 1.8.12 released 2012-08-09
 	* Fixes ID 3421347 Sensor list command should use channel field from SDR
 	* Added packing directive for ARM cross compile with GCC 3.4.5,
 		otherwise the sdr structures gets padded and the pointer cast
-		result in incorrect alignement
+		result in incorrect alignment
 	* Added 'sdr fill sensors nosats' support to speed up SDR discovery
 	* Added SDR name display during discovery (with -v)
 	* Added support for sensor types - Processor related sensor
@@ -775,7 +775,7 @@ version 1.8.12 released 2012-08-09
 	* Fixes ID 3485004 - misuse of strtol()
 	* Replaces calls to strtol() with str2uchar() calls and adds error
 		messages if invalid input is given.
-	* Don't overwite the iflags bits prior to setting the boot parameters.
+	* Don't overwrite the iflags bits prior to setting the boot parameters.
 		This fixes ipmitool so that
 		chassis bootdev bios clear-cmos=yes
 		will correctly clear the bios cmos.
@@ -806,7 +806,7 @@ version 1.8.12 released 2012-08-09
 		is C3, wait till timeout has expired before reporting it.
 	* hpm During manual rollback, code now gets target capabilities
 		instead of using a default timeout of 60 seconds.
-	* Added firmware auxilliary bytes to hpm outputs
+	* Added firmware auxiliary bytes to hpm outputs
 	* hpm Add support for BIG Buffer (Use when -z option is used)
 	* Fix the case where ipmitool loses the iol connection during the upload
 		block process.  Once IPMITool was successfully sent the first
@@ -847,10 +847,10 @@ version 1.8.12 released 2012-08-09
 	* Fixes ignorance of existing daemon PID file which results in PID being
 		overwritten.  Adds proper umask() before writing PID file.
 	* applied fix for ID 2865111 (AIX build)
-	* Fix a proplem when using bridged IPMI commands on the lanplus
+	* Fix a problem when using bridged IPMI commands on the lanplus
 		interface (-I lanplus with -b -t or -m switches)  resulting in
 		"Close Session command failure".
-	* Add fix with usage of CFh (duplicate request).  Usefull for
+	* Add fix with usage of CFh (duplicate request).  Useful for
 		slow commands
 	* Fix issue with sequence number. (Speed up transfer)
 
@@ -1007,7 +1007,7 @@ version 1.8.9 released 2007-03-06
 	* Fix ipmievd fd closing bug
 	* Add set-in-progress flag support to chassis bootdev
 	* Added new chassis bootdev options
-	* Add sol payload enable/disable comman
+	* Add sol payload enable/disable command
 	* Fix SOL set errors when commit-write not supported
 	* Fix reset of session timeout for lanplus interface
 	* Fixed lan interface accessibility timeout handling
@@ -1114,14 +1114,14 @@ version 1.7.1
 	  for interface detection and new STREAMS message-based interface)
 
 version 1.7.0
-	* Propogate errors correctly so exit status will be useful
+	* Propagate errors correctly so exit status will be useful
 	* More consistent display of errors including completion code text
 	* Errors and debug is send to stderr now
 	* New "sel get" command that will print details about SEL entry
 	  and corresponding SDR records as well as FRUs via entity association
 	* Improved event generator, now supports reading events from text file
 	* New "-o oemtype" option for specifying OEM boards
-	  exsting types are "supermicro" and "intelwv2"
+	  existing types are "supermicro" and "intelwv2"
 	* New PEF subsystem from Tim Murphy at Dell
 	* New "bmc" plugin for Solaris 10 x86
 	* Many bugfixes and contributed patches

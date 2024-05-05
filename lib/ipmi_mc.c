@@ -555,7 +555,7 @@ static bool _is_time_valid(time_t t)
 	gmtime_r(&t, &tm);
 	gmtime_r(&t_now, &now);
 
-	/* It's enought to check that the year fits in [Epoch .. now] interval */
+	/* It's enough to check that the year fits in [Epoch .. now] interval */
 
 	if (tm.tm_year + TM_YEAR_BASE < EPOCH_YEAR)
 		return false;

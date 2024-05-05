@@ -155,23 +155,23 @@ struct HpmfwupgGetTargetUpgCapabilitiesResp {
 		unsigned char byte;
 		struct {
 #if WORDS_BIGENDIAN
-			unsigned char fwUpgUndesirable    : 1;
-			unsigned char autRollbackOverride : 1;
-			unsigned char ipmcDegradedDurinUpg: 1;
-			unsigned char deferActivation     : 1;
-			unsigned char servAffectDuringUpg : 1;
-			unsigned char manualRollback      : 1;
-			unsigned char autRollback         : 1;
-			unsigned char ipmcSelftestCap     : 1;
+			unsigned char fwUpgUndesirable     : 1;
+			unsigned char autRollbackOverride  : 1;
+			unsigned char ipmcDegradedDuringUpg: 1;
+			unsigned char deferActivation      : 1;
+			unsigned char servAffectDuringUpg  : 1;
+			unsigned char manualRollback       : 1;
+			unsigned char autRollback          : 1;
+			unsigned char ipmcSelftestCap      : 1;
 #else
-			unsigned char ipmcSelftestCap     : 1;
-			unsigned char autRollback         : 1;
-			unsigned char manualRollback      : 1;
-			unsigned char servAffectDuringUpg : 1;
-			unsigned char deferActivation     : 1;
-			unsigned char ipmcDegradedDurinUpg: 1;
-			unsigned char autRollbackOverride : 1;
-			unsigned char fwUpgUndesirable    : 1;
+			unsigned char ipmcSelftestCap      : 1;
+			unsigned char autRollback          : 1;
+			unsigned char manualRollback       : 1;
+			unsigned char servAffectDuringUpg  : 1;
+			unsigned char deferActivation      : 1;
+			unsigned char ipmcDegradedDuringUpg: 1;
+			unsigned char autRollbackOverride  : 1;
+			unsigned char fwUpgUndesirable     : 1;
 #endif
 		} ATTRIBUTE_PACKING bitField;
 	} ATTRIBUTE_PACKING GlobalCapabilities;

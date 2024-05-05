@@ -187,7 +187,7 @@ void ipmi_intf_print(struct ipmi_intf_support * intflist)
  *
  * @name:	interface name to try and load
  *
- * returns pointer to inteface structure if found
+ * returns pointer to interface structure if found
  * returns NULL on error
  */
 struct ipmi_intf * ipmi_intf_load(char * name)

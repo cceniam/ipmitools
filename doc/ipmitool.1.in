@@ -2545,7 +2545,7 @@ Discover Node Manager presence as well as the Node Manager version, revision, an
 .br
 
 Add a new power policy, or overwrite an existing policy.
-The \fIcorrection\fP parameter is the agressiveness of frequency limiting, default is auto.
+The \fIcorrection\fP parameter is the aggressiveness of frequency limiting, default is auto.
 The \fItrig_lim\fP is the correction time limit and must be at least 6000 and not greater than 65535.
 The \fIstats\fP setting is the averaging period in seconds and ranges from 1-65535.
 If domain is not supplied a default of platform is used.
@@ -2556,7 +2556,7 @@ If domain is not supplied a default of platform is used.
 .br
 
 Add a new inlet temp policy, or overwrite an existing policy.
-The \fIcorrection\fP parameter is the agressiveness of frequency limiting, default is auto.
+The \fIcorrection\fP parameter is the aggressiveness of frequency limiting, default is auto.
 The \fItrig_lim\fP is the correction time limit and must be at least 6000 and not greater than 65535.
 The \fIstats\fP setting is the averaging period in seconds and ranges from 1-65535.
 If domain is not supplied a default of platform is used.
@@ -3648,7 +3648,7 @@ Character device node used to communicate with the bmc driver.
 The
 .BR ipmitool
 \fIlipmi\fP interface uses the Solaris 9 IPMI kernel device driver.
-It has been superceeded by the \fIbmc\fP interface on Solaris 10.  You can tell
+It has been superseded by the \fIbmc\fP interface on Solaris 10.  You can tell
 .BR ipmitool
 to use this interface by specifying it on the command line.
 
@@ -3743,7 +3743,7 @@ and encryption algorithms to use for for \fIlanplus\fP session based
 on the cipher suite ID found in the IPMIv2.0 specification in table
 22\-20.  The default cipher suite is \fI17\fP which specifies
 RAKP\-HMAC\-SHA256 authentication, HMAC\-SHA256\-128 integrity, and 
-AES\-CBC\-128 encryption algorightms.
+AES\-CBC\-128 encryption algorithms.
 
 .SH "FREE INTERFACE"
 .LP

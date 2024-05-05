@@ -56,7 +56,7 @@ This is not available with all commands.
 The remote server authentication, integrity, and encryption algorithms
 to use for IPMIv2 \fIlanplus\fP connections.  See table 22\-19 in the
 IPMIv2 specification.  The default is 3 which specifies RAKP\-HMAC\-SHA1 
-authentication, HMAC\-SHA1\-96 integrity, and AES\-CBC\-128 encryption algorightms.
+authentication, HMAC\-SHA1\-96 integrity, and AES\-CBC\-128 encryption algorithms.
 .TP 
 \fB\-E\fR
 The remote server password is specified by the environment

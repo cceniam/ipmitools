@@ -50,12 +50,12 @@ POSSIBILITY OF SUCH DAMAGE.
 #define IPMI_DELL_LCD_CONFIG_USER_DEFINED   0x00 /* use string set by user*/
 #define IPMI_DELL_LCD_CONFIG_DEFAULT        0x01 /* use platform model name*/
 #define IPMI_DELL_LCD_CONFIG_NONE           0x02 /* blank*/
-#define IPMI_DELL_LCD_iDRAC_IPV4ADRESS      0x04 /* use string set by user*/
+#define IPMI_DELL_LCD_iDRAC_IPV4ADDRESS     0x04 /* use string set by user*/
 #define IPMI_DELL_LCD_IDRAC_MAC_ADDRESS     0x08 /* use platform model name*/
 #define IPMI_DELL_LCD_OS_SYSTEM_NAME        0x10 /* blank*/
 
 #define IPMI_DELL_LCD_SERVICE_TAG           0x20  /* use string set by user*/
-#define IPMI_DELL_LCD_iDRAC_IPV6ADRESS      0x40  /* use string set by user*/
+#define IPMI_DELL_LCD_iDRAC_IPV6ADDRESS     0x40  /* use string set by user*/
 #define IPMI_DELL_LCD_AMBEINT_TEMP          0x80  /* use platform model name*/
 #define IPMI_DELL_LCD_SYSTEM_WATTS          0x100 /* blank*/
 #define IPMI_DELL_LCD_ASSET_TAG             0x200
@@ -174,7 +174,7 @@ typedef struct _lcd_mode
     uint8_t parametersel;
     uint32_t lcdmode;
     uint16_t lcdquallifier;
-    uint32_t capabilites;
+    uint32_t capabilities;
     uint8_t error_display;
     uint8_t Resv;
 } ATTRIBUTE_PACKING LCD_MODE;
@@ -289,7 +289,7 @@ typedef struct
 #define SET_NIC_SELECTION_CMD       (uint8_t)(0x24)
 #define GET_NIC_SELECTION_CMD       (uint8_t)(0x25)
 #define GET_ACTIVE_NIC_CMD          (uint8_t)(0xc1)
-#define POWER_EFFICENCY_CMD     		(uint8_t)(0xc0)
+#define POWER_EFFICIENCY_CMD     		(uint8_t)(0xc0)
 #define SERVER_POWER_CONSUMPTION_CMD   	(uint8_t)(0x8F)
 
 #define POWER_SUPPLY_INFO           (uint8_t)(0xb0)
@@ -334,7 +334,7 @@ typedef struct _ipmi_power_supply_infoo
 	uint16_t ratedAmps;
 	uint16_t ratedVolts;
 	uint32_t vendorid;
-    uint8_t FrimwareVersion[MAX_POWER_FW_VERSION];
+    uint8_t FirmwareVersion[MAX_POWER_FW_VERSION];
 	uint8_t  Powersupplytype;
 	uint16_t ratedDCWatts;
 	uint16_t Resv;
@@ -380,7 +380,7 @@ typedef struct ipmi_inst_power_consumption_data
 #if HAVE_PRAGMA_PACK
 #pragma pack(push, 1)
 #endif
-typedef struct _ipmi_avgpower_consump_histroy
+typedef struct _ipmi_avgpower_consump_history
 {
     uint8_t parameterselector;
     uint16_t lastminutepower;
@@ -396,7 +396,7 @@ typedef struct _ipmi_avgpower_consump_histroy
 #if HAVE_PRAGMA_PACK
 #pragma pack(push, 1)
 #endif
-typedef struct _ipmi_power_consump_histroy
+typedef struct _ipmi_power_consump_history
 {
     uint8_t parameterselector;
     uint16_t lastminutepower;

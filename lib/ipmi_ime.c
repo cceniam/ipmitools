@@ -49,12 +49,12 @@
 * - Dynamic Power Node Manager
 * - Intelligent Power Node Manager
 * 
-* Consult Intel litterature for more information on this technology.
+* Consult Intel literature for more information on this technology.
 *
 * The ME firmware resides on the platform boot flash and contains read only
 * boot code for the ME as well as boot image redundancy support. 
 *
-* This module implements an Upgrade Agent for the ME firwmare. Because the ME 
+* This module implements an Upgrade Agent for the ME firmware. Because the ME 
 * implements IPMI command handling, the agent speaks directly to the ME. In other
 * words, in order the reach the ME, the BMC must implement IPMB bridging.
 *

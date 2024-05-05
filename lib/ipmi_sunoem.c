@@ -839,7 +839,7 @@ ipmi_sunoem_sshkey_set(struct ipmi_intf * intf, uint8_t uid, char * ifile)
 	int32_t size = 0;
 
 	if (!ifile) {
-		lprintf(LOG_ERR, "Invalid or misisng input filename.");
+		lprintf(LOG_ERR, "Invalid or missing input filename.");
 		return (-1);
 	}
 

@@ -547,7 +547,7 @@ struct pef_serial_cfgparm_tap_svc_settings {
 #endif
 
 
-#if 0		/* FYI : config parm groupings */
+#if 0		/* FYI : config param groupings */
 	struct pef_config_parms {								/* PEF */
 		struct pef_cfgparm_set_in_progress;
 		struct pef_cfgparm_control;
@@ -619,7 +619,7 @@ struct pef_serial_cfgparm_tap_svc_settings {
 		struct pef_serial_cfgparm_tap_pager_id_strings;
 		struct pef_serial_cfgparm_tap_service_settings;
 		struct pef_serial_cfgparm_terminal_mode_config;
-		struct pef_serial_cfgparm_ppp_otions;
+		struct pef_serial_cfgparm_ppp_options;
 		struct pef_serial_cfgparm_ppp_primary_rmcp_port;
 		struct pef_serial_cfgparm_ppp_secondary_rmcp_port;
 		struct pef_serial_cfgparm_ppp_link_auth;

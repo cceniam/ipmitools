@@ -959,7 +959,7 @@ read_open_session_response(struct ipmi_rs * rsp, int offset)
  * param offset [in] tells us where the rakp2 payload starts
  * param auth_alg [in] describes the authentication algorithm was agreed upon in
  *       the open session request/response phase.  We need to know that here so
- *       that we know how many bytes (if any) to read fromt the packet.
+ *       that we know how many bytes (if any) to read from the packet.
  *
  * returns 0 on success, 1 on error
  */
@@ -2227,7 +2227,7 @@ ipmi_lanplus_send_payload(
 			{
 				lprintf(LOG_DEBUG, ">> SENDING A RAKP 1 MESSAGE\n");
 				assert(session->v2_data.session_state ==
-						 LANPLUS_STATE_OPEN_SESSION_RECEIEVED);
+						 LANPLUS_STATE_OPEN_SESSION_RECEIVED);
 
 				ipmi_lanplus_build_v2x_msg(intf,        /* in  */
 								payload,     /* in  */
@@ -2942,7 +2942,7 @@ ipmi_lanplus_open_session(struct ipmi_intf * intf)
 		session->v2_data.crypt_alg      =
 			rsp->payload.open_session_response.crypt_alg;
 		session->v2_data.session_state  =
-			LANPLUS_STATE_OPEN_SESSION_RECEIEVED;
+			LANPLUS_STATE_OPEN_SESSION_RECEIVED;
 
 
 		/*

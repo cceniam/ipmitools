@@ -751,9 +751,9 @@ struct get_sdr_repository_info_rsp {
 	uint8_t delete_sdr_supported:1;
 	uint8_t partial_add_sdr_supported:1;
 	uint8_t reserve_sdr_repository_supported:1;
-	uint8_t get_sdr_repository_allo_info_supported:1;
+	uint8_t get_sdr_repository_allow_info_supported:1;
 #else
-	uint8_t get_sdr_repository_allo_info_supported:1;
+	uint8_t get_sdr_repository_allow_info_supported:1;
 	uint8_t reserve_sdr_repository_supported:1;
 	uint8_t partial_add_sdr_supported:1;
 	uint8_t delete_sdr_supported:1;

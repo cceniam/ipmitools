@@ -308,8 +308,8 @@ typedef struct {
 /*D*
 //  Name:       ImbRequestBuffer
 //  Purpose:    Structure definition for holding IMB message data
-//  Context:    Used by SendTimedImbpMessage and SendTimedI2cMessge
-//              functions in the library interface. In use, it is overlayed on a
+//  Context:    Used by SendTimedImbpMessage and SendTimedI2cMessage
+//              functions in the library interface. In use, it is overlaid on a
 //				char buffer of size MIN_IMB_REQ_BUF_SIZE +
 //  Fields:
 //              respBufSize     size of the response buffer

@@ -306,7 +306,7 @@ struct fru_multirec_oem_header {
 #define FRU_UTCA_SHMC_IP_LINK			0x24
 #define FRU_UTCA_POWER_POLICY			0x25
 #define FRU_UTCA_ACTIVATION				0x26
-#define FRU_UTCA_PM_CAPABILTY			0x27
+#define FRU_UTCA_PM_CAPABILITY			0x27
 #define FRU_UTCA_FAN_GEOGRAPHY			0x28
 #define FRU_UTCA_CLOCK_MAPPING			0x29
 #define FRU_UTCA_MSG_BRIDGE_POLICY		0x2A
@@ -412,11 +412,11 @@ struct fru_picmgext_amc_link_desc_core {
 #endif
 struct fru_picmgext_amc_link_desc_extra {
 #ifndef WORDS_BIGENDIAN
-	unsigned char asymetricMatch:2;
+	unsigned char asymmetricMatch:2;
 	unsigned char reserved:6;
 #else
 	unsigned char reserved:6;
-	unsigned char asymetricMatch:2;
+	unsigned char asymmetricMatch:2;
 #endif
 }ATTRIBUTE_PACKING;
 #if HAVE_PRAGMA_PACK

@@ -21,7 +21,7 @@ const struct valstr ipmi_rakp_return_codes[] = {
 	{ IPMI_RAKP_STATUS_INVALID_INTEGRITY_CHECK_VALUE,      "invalid integrity check value"       },
 	{ IPMI_RAKP_STATUS_INVALID_CONFIDENTIALITY_ALGORITHM,  "invalid confidentiality algorithm"   },
 	{ IPMI_RAKP_STATUS_NO_CIPHER_SUITE_MATCH,              "no matching cipher suite"            },
-	{ IPMI_RAKP_STATUS_ILLEGAL_PARAMTER,                   "illegal parameter"                   },
+	{ IPMI_RAKP_STATUS_ILLEGAL_PARAMETER,                  "illegal parameter"                   },
 	{ 0,                                                   0                                     },
 };
 

@@ -1350,7 +1350,7 @@ fru_area_print_product(struct ipmi_intf * intf, struct fru_info * fru,
  * Take n bytes from src and convert them into hex doublets in dst
  *
  * The function is invoked from a place where the dst is known to
- * have enough space to accomodate the hex string representation
+ * have enough space to accommodate the hex string representation
  * of a UUID.
  *
  * @param[out] dst The destination buffer (at least 33 bytes long)
@@ -2907,7 +2907,7 @@ static void ipmi_fru_picmg_ext_print(uint8_t * fru_data, int off, int length)
 			printf("      AMC.0 extension version: R%d.%d\n",
 					(extVersion >> 0)& 0x0F,
 					(extVersion >> 4)& 0x0F );
-			printf("      Carrier Sie Number Cnt: %d\n", siteCount);
+			printf("      Carrier Site Number Cnt: %d\n", siteCount);
 
 			for (i = 0 ; i < siteCount; i++ ){
 				printf("       Site ID: %i \n", fru_data[offset++]);
@@ -3040,7 +3040,7 @@ static void ipmi_fru_picmg_ext_print(uint8_t * fru_data, int off, int length)
 		case FRU_UTCA_SHMC_IP_LINK:
 		case FRU_UTCA_POWER_POLICY:
 		case FRU_UTCA_ACTIVATION:
-		case FRU_UTCA_PM_CAPABILTY:
+		case FRU_UTCA_PM_CAPABILITY:
 		case FRU_UTCA_FAN_GEOGRAPHY:
 		case FRU_UTCA_CLOCK_MAPPING:
 		case FRU_UTCA_MSG_BRIDGE_POLICY:
@@ -5160,8 +5160,8 @@ ipmi_fru_set_field_string_rebuild(struct ipmi_intf * intf, uint8_t fruId,
 	#ifdef DBG_RESIZE_FRU
 	printf("Padding Length: %u\n", padding_len);
 	printf("NumByte Change: %i\n", num_byte_change);
-	printf("Start SecChnge: %x\n", *(fru_data_old + fru_field_offset_tmp));
-	printf("End SecChnge  : %x\n", *(fru_data_old + fru_field_offset_tmp + strlen(f_string) + 1));
+	printf("Start SecChange: %x\n", *(fru_data_old + fru_field_offset_tmp));
+	printf("End SecChange  : %x\n", *(fru_data_old + fru_field_offset_tmp + strlen(f_string) + 1));
 
 	printf("Start Section : %x\n", *(fru_data_old + header_offset));
 	printf("End Sec wo Pad: %x\n", *(fru_data_old + header_offset + fru_section_len - 2 - padding_len));

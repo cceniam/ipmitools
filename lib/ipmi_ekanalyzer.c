@@ -1542,7 +1542,7 @@ ipmi_ek_check_physical_connectivity(
 * Function name: ipmi_ek_compare_link
 *
 * Description: This function compares link grouping id of each
-*               amc p2p connectiviy record
+*               amc p2p connectivity record
 *
 * Restriction: None
 *
@@ -1866,7 +1866,7 @@ ipmi_ek_compare_channel_descriptor(
 * Function name: ipmi_ek_compare_link_descriptor
 *
 * Description: This function compares 2 link descriptors of 2
-*               amc p2p connectiviy record
+*               amc p2p connectivity record
 *
 * Restriction: None
 *
@@ -1981,7 +1981,7 @@ ipmi_ek_compare_asym(unsigned char asym[COMPARE_CANDIDATE])
 *
 * Function name: ipmi_ek_compare_link_descriptor
 *
-* Description: This function compare number of enble port of Link designator
+* Description: This function compare number of enable port of Link designator
 *
 * Restriction: None
 *
@@ -3407,7 +3407,7 @@ ipmi_ek_display_shelf_fan_geography_record(struct ipmi_ek_multi_header *record)
 *
 * Function name: ipmi_ek_display_board_p2p_record
 *
-* Description: this function displays board pont-to-point record.
+* Description: this function displays board point-to-point record.
 *
 * Restriction: Reference: PICMG 3.0 Specification Table 3-44
 *
@@ -3875,7 +3875,7 @@ ipmi_ek_display_amc_carrier_info_record(struct ipmi_ek_multi_header *record)
 	printf("   AMC.0 extension version: R%d.%d\n",
 			(extVersion >> 0) & 0x0F,
 			(extVersion >> 4) & 0x0F);
-	printf("   Carrier Sie Number Count: %d\n", siteCount);
+	printf("   Carrier Site Number Count: %d\n", siteCount);
 	while (siteCount > 0) {
 		printf("\tSite ID (%d): %s \n", record->data[offset],
 				val2str(record->data[offset], ipmi_ekanalyzer_module_type));
@@ -3889,7 +3889,7 @@ ipmi_ek_display_amc_carrier_info_record(struct ipmi_ek_multi_header *record)
 *
 * Function name: ipmi_ek_display_clock_carrier_p2p_record
 *
-* Description: this function displays Carrier clock point-to-pont
+* Description: this function displays Carrier clock point-to-point
 *              connectivity record.
 *
 * Restriction: the following code is copy from ipmi_fru.c with modification in

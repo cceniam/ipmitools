@@ -2932,7 +2932,7 @@ ipmi_sdr_get_reservation(struct ipmi_intf *intf, int use_builtin,
 	req.msg.cmd = GET_SDR_RESERVE_REPO;
 	rsp = intf->sendrecv(intf, &req);
 
-	/* be slient for errors, they are handled by calling function */
+	/* be silent for errors, they are handled by calling function */
 	if (!rsp)
 		return -1;
 	if (rsp->ccode)
@@ -4439,7 +4439,7 @@ ipmi_sdr_print_info(struct ipmi_intf *intf)
 	       reserve_sdr_repository_supported ? "yes" : "no");
 	printf("SDR Repository Alloc info supported : %s\n",
 	       sdr_repository_info.
-	       get_sdr_repository_allo_info_supported ? "yes" : "no");
+	       get_sdr_repository_allow_info_supported ? "yes" : "no");
 
 	return 0;
 }

@@ -549,7 +549,7 @@ SendTimedEmpMessageResponse_Ex (ImbPacket *ptr, char *responseDataBuf, int
 	i = 0;
 	/* checking for the IPMI version & then assigning the channel number for
 	 * EMP. Actually the channel number is same in both the versions.This is
-	 * just to  maintain the consistancy with the same method for LAN. This
+	 * just to  maintain the consistency with the same method for LAN. This
 	 * is the 1st byte of the SEND MESSAGE command.
 	 */
 	if (IpmiVersion == IPMI_10_VERSION) {
