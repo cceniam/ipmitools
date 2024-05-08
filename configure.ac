@@ -91,6 +91,7 @@ xenable_all_options=yes
 xenable_intf_bmc=no
 xenable_intf_dbus=no
 xenable_intf_dummy=no
+xenable_intf_https=no
 xenable_intf_imb=yes
 xenable_intf_lipmi=yes
 xenable_intf_open=yes
@@ -229,6 +230,14 @@ AC_CHECK_LIB([systemd], [sd_bus_default],
 		have_systemd=yes
 	],
 	[ have_systemd=no],[])
+
+dnl check for libcurl with websocket in case https-intf is requested
+AC_CHECK_LIB([curl], [curl_ws_send],
+	[
+		LIBS="$LIBS -lcurl"
+		have_curl=yes
+	],
+	[ have_curl=no],[])
 
 dnl enable IPMIv1.5 LAN interface
 AC_ARG_ENABLE([intf-lan],
@@ -612,6 +621,25 @@ if test "x$xenable_intf_dbus" = "xyes"; then
 	IPMITOOL_INTF_LIB="$IPMITOOL_INTF_LIB dbus/libintf_dbus.la"
 fi
 
+dnl enable IPMI https interface
+AC_ARG_ENABLE([intf-https],
+		[AC_HELP_STRING([--enable-intf-https],
+			[enable IPMI https interface [default=no]])],
+		[xenable_intf_https=$enableval],
+		[xenable_intf_https=no])
+if test "x$xenable_intf_https" != "xno"; then
+	if test "x$have_curl" != "xyes"; then
+		AC_MSG_ERROR([** Unable to find libcurl required by https-intf.])
+		xenable_intf_https=no
+	fi
+fi
+if test "x$xenable_intf_https" = "xyes"; then
+	AC_DEFINE(IPMI_INTF_HTTPS, [1], [Define to 1 to enable https interface.])
+	AC_SUBST(INTF_HTTPS, [https])
+	AC_SUBST(INTF_HTTPS_LIB, [libintf_https.la])
+	IPMITOOL_INTF_LIB="$IPMITOOL_INTF_LIB https/libintf_https.la"
+fi
+
 dnl enable Dummy interface for testing
 AC_ARG_ENABLE([intf-dummy],
 	[AC_HELP_STRING([--enable-intf-dummy],
@@ -755,6 +783,7 @@ AC_CONFIG_FILES([Makefile
 		src/plugins/lanplus/Makefile
 		src/plugins/open/Makefile
 		src/plugins/free/Makefile
+		src/plugins/https/Makefile
 		src/plugins/imb/Makefile
 		src/plugins/bmc/Makefile
 		src/plugins/dbus/Makefile
@@ -775,6 +804,7 @@ AC_MSG_RESULT([  lan     : $xenable_intf_lan])
 AC_MSG_RESULT([  lanplus : $xenable_intf_lanplus])
 AC_MSG_RESULT([  open    : $xenable_intf_open])
 AC_MSG_RESULT([  free    : $xenable_intf_free])
+AC_MSG_RESULT([  https   : $xenable_intf_https])
 AC_MSG_RESULT([  imb     : $xenable_intf_imb])
 AC_MSG_RESULT([  bmc     : $xenable_intf_bmc])
 AC_MSG_RESULT([  dbus    : $xenable_intf_dbus])
