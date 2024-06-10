@@ -457,7 +457,7 @@ print_user_usage(void)
 "                      * 0xF - No Access");
 	lprintf(LOG_NOTICE, "");
 	lprintf(LOG_NOTICE,
-"               test         <user id> <16|20> [<password]>");
+"               test         <user id> <16|20> [<password>]");
 	lprintf(LOG_NOTICE, "");
 }
 
