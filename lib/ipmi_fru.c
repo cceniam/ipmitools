@@ -1553,7 +1553,7 @@ fru_area_print_multirec(struct ipmi_intf * intf, struct fru_info * fru,
 		case FRU_RECORD_TYPE_MANAGEMENT_ACCESS:
 			{
 				struct fru_multirec_mgmt *mmh =
-					(struct fru_multirect_mgmt *)
+					(struct fru_multirec_mgmt *)
 					&fru_data[sizeof(struct fru_multirec_header)];
 				size_t datalen = h->len - sizeof(*mmh);
 				struct {
