@@ -3362,12 +3362,14 @@ ipmi_sdr_find_sdr_bynumtype(struct ipmi_intf *intf, uint16_t gen_id, uint8_t num
 		case SDR_RECORD_TYPE_COMPACT_SENSOR:
 			if (e->record.common->keys.sensor_num == num &&
 			    e->record.common->keys.owner_id == (gen_id & 0x00ff) &&
+			    e->record.common->keys.lun == ((gen_id & 0x0300) >> 8) &&
 			    e->record.common->sensor.type == type)
 				return e;
 			break;
 		case SDR_RECORD_TYPE_EVENTONLY_SENSOR:
 			if (e->record.eventonly->keys.sensor_num == num &&
 			    e->record.eventonly->keys.owner_id == (gen_id & 0x00ff) &&
+			    e->record.eventonly->keys.lun == ((gen_id & 0x0300) >> 0x8) &&
 			    e->record.eventonly->sensor_type == type)
 				return e;
 			break;
@@ -3404,6 +3406,7 @@ ipmi_sdr_find_sdr_bynumtype(struct ipmi_intf *intf, uint16_t gen_id, uint8_t num
 			    (struct sdr_record_common_sensor *) rec;
 			if (sdrr->record.common->keys.sensor_num == num
 			    && sdrr->record.common->keys.owner_id == (gen_id & 0x00ff)
+			    && sdrr->record.common->keys.lun == ((gen_id & 0x0300) >> 8)
 			    && sdrr->record.common->sensor.type == type)
 				found = 1;
 			break;
@@ -3412,6 +3415,7 @@ ipmi_sdr_find_sdr_bynumtype(struct ipmi_intf *intf, uint16_t gen_id, uint8_t num
 			    (struct sdr_record_eventonly_sensor *) rec;
 			if (sdrr->record.eventonly->keys.sensor_num == num
 			    && sdrr->record.eventonly->keys.owner_id == (gen_id & 0x00ff)
+			    && sdrr->record.eventonly->keys.lun == ((gen_id & 0x0300) >> 8)
 			    && sdrr->record.eventonly->sensor_type == type)
 				found = 1;
 			break;
