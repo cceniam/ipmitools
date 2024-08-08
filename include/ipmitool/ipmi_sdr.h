@@ -859,6 +859,10 @@ void ipmi_sdr_print_sensor_hysteresis(struct sdr_record_common_sensor *sensor,
 		 struct sdr_record_full_sensor   *full,
 		 uint8_t hysteresis_value,
 		 const char *hdrstr);
+struct sdr_record_list *ipmi_sdr_print_entry_by_id_record(struct ipmi_intf *intf, 
+		 char *id_arr);
+struct sdr_record_list *ipmi_sdr_print_entry_by_id_string(struct ipmi_intf *intf, 
+		 char *id_arr);
 const char *ipmi_sdr_get_unit_string(bool pct, uint8_t type,
                                      uint8_t base, uint8_t modifier);
 struct sensor_reading *
@@ -876,6 +880,7 @@ double sdr_convert_sensor_hysterisis(struct sdr_record_full_sensor *sensor,
 				  uint8_t val);
 uint8_t sdr_convert_sensor_value_to_raw(struct sdr_record_full_sensor *sensor,
 					double val);
+bool sdr_is_record_id(const char* id);
 struct ipmi_rs *ipmi_sdr_get_sensor_reading(struct ipmi_intf *intf,
 					    uint8_t sensor);
 struct ipmi_rs *ipmi_sdr_get_sensor_reading_ipmb(struct ipmi_intf *intf,
@@ -906,6 +911,8 @@ struct sdr_record_list *ipmi_sdr_find_sdr_bysensortype(struct ipmi_intf *intf,
 						       uint8_t type);
 struct sdr_record_list *ipmi_sdr_find_sdr_byid(struct ipmi_intf *intf,
 					       char *id);
+struct sdr_record_list *ipmi_sdr_find_sdr_by_id_record(struct ipmi_intf *intf,
+					       int id);
 struct sdr_record_list *ipmi_sdr_find_sdr_bytype(struct ipmi_intf *intf,
 						 uint8_t type);
 int ipmi_sdr_list_cache(struct ipmi_intf *intf);

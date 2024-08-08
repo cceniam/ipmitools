@@ -41,6 +41,8 @@
 #include <unistd.h>
 #include <sys/types.h>
 #include <time.h>
+#include <ctype.h>
+#include <stdlib.h>
 
 #include <ipmitool/ipmi.h>
 #include <ipmitool/log.h>
@@ -3865,6 +3867,38 @@ ipmi_sdr_find_sdr_bytype(struct ipmi_intf *intf, uint8_t type)
 	return head;
 }
 
+/* sdr_is_record_id  -  check if sensor ID is a number
+ *
+ * @id:		string to match for sensor name
+ *
+ * returns bool false if value is not hexadecimal or decimal
+ */
+bool
+sdr_is_record_id(const char* id_arr)
+{
+	int first = 0, second = 1;
+	int id_len = strlen(id_arr);
+
+	if(id_len == 0)
+		return false;
+
+	for (int i = 0; i < id_len; ++i)
+		if(!isdigit((id_arr[i])) && id_arr[i] != 'x')
+			return false;
+
+	/* sensor ID might be a hexadecimal number */
+	if(id_len > 2){
+		if(id_arr[first] != '0' || id_arr[second] != 'x')
+			return false;
+
+		for(int i = 2; i < id_len; ++i)
+			if(!isxdigit((id_arr[i])))
+				return false;
+	}
+
+	return true;
+}
+
 /* ipmi_sdr_find_sdr_byid  -  lookup SDR entry by ID string
  *
  * @intf:	ipmi interface
@@ -4033,6 +4067,128 @@ ipmi_sdr_find_sdr_byid(struct ipmi_intf *intf, char *id)
 		/* add to global record liset */
 		if (!sdr_list_head)
 			sdr_list_head = sdrr;
+		else
+			sdr_list_tail->next = sdrr;
+
+		sdr_list_tail = sdrr;
+
+		if (found)
+			return sdrr;
+	}
+
+	return NULL;
+}
+
+/* ipmi_sdr_find_sdr_byid  -  lookup SDR entry by ID string
+ *
+ * @intf:	ipmi interface
+ * @id:		uint8_t to match for sensor name
+ *
+ * returns pointer to SDR list
+ * returns NULL on error
+ */
+struct sdr_record_list *
+ipmi_sdr_find_sdr_by_id_record(struct ipmi_intf *intf, int id)
+{
+	struct sdr_get_rs *header;
+	struct sdr_record_list *e;
+	int found = 0;
+
+	if (!sdr_list_itr) {
+		sdr_list_itr = ipmi_sdr_start(intf, 0);
+		if (!sdr_list_itr) {
+			lprintf(LOG_ERR, "Unable to open SDR for reading");
+			return NULL;
+		}
+	}
+
+	/* check what we've already read */
+	for (e = sdr_list_head; e; e = e->next) {
+		if(e->type == SDR_RECORD_TYPE_FULL_SENSOR || e->type == 
+										SDR_RECORD_TYPE_COMPACT_SENSOR){
+			if(e->record.common->keys.sensor_num == id){
+				return e;
+			}
+		}
+		else if (e->type == SDR_RECORD_TYPE_EVENTONLY_SENSOR){
+			if(e->record.eventonly->keys.sensor_num == id){
+				return e;
+			}
+		}
+	}
+
+	/* now keep looking */
+	while ((header = ipmi_sdr_get_next_header(intf, sdr_list_itr))) {
+		uint8_t *rec;
+		struct sdr_record_list *sdrr;
+
+		sdrr = malloc(sizeof (struct sdr_record_list));
+		if (!sdrr) {
+			lprintf(LOG_ERR, "ipmitool: malloc failure");
+			break;
+		}
+		memset(sdrr, 0, sizeof (struct sdr_record_list));
+		sdrr->id = header->id;
+		sdrr->type = header->type;
+
+		rec = ipmi_sdr_get_record(intf, header, sdr_list_itr);
+		if (!rec) {
+			if (sdrr) {
+				free(sdrr);
+				sdrr = NULL;
+			}
+			continue;
+		}
+
+		switch (header->type) {
+		case SDR_RECORD_TYPE_FULL_SENSOR:
+			sdrr->record.full =
+			    (struct sdr_record_full_sensor *) rec;
+			if(sdrr->record.common->keys.sensor_num == id)
+				found = 1;
+			break;
+		case SDR_RECORD_TYPE_COMPACT_SENSOR:
+			sdrr->record.compact =
+			    (struct sdr_record_compact_sensor *) rec;
+			if(sdrr->record.common->keys.sensor_num == id)
+				found = 1;
+				break;
+			break;
+		case SDR_RECORD_TYPE_EVENTONLY_SENSOR:
+			sdrr->record.eventonly =
+			    (struct sdr_record_eventonly_sensor *) rec;
+			if(sdrr->record.eventonly->keys.sensor_num == id)
+				found = 1;
+			break;
+		case SDR_RECORD_TYPE_GENERIC_DEVICE_LOCATOR:
+			sdrr->record.genloc =
+			    (struct sdr_record_generic_locator *) rec;
+			break;
+		case SDR_RECORD_TYPE_FRU_DEVICE_LOCATOR:
+			sdrr->record.fruloc =
+			    (struct sdr_record_fru_locator *) rec;
+			break;
+		case SDR_RECORD_TYPE_MC_DEVICE_LOCATOR:
+			sdrr->record.mcloc =
+			    (struct sdr_record_mc_locator *) rec;
+			break;
+		case SDR_RECORD_TYPE_ENTITY_ASSOC:
+			sdrr->record.entassoc =
+			    (struct sdr_record_entity_assoc *) rec;
+			break;
+		default:
+			free(rec);
+			rec = NULL;
+			if (sdrr) {
+				free(sdrr);
+				sdrr = NULL;
+			}
+			continue;
+		}
+
+		/* add to global record liset */
+		if (!sdr_list_head)
+				sdr_list_head = sdrr;
 		else
 			sdr_list_tail->next = sdrr;
 
@@ -4684,6 +4840,81 @@ ipmi_sdr_print_entity(struct ipmi_intf *intf, char *entitystr)
 	return rc;
 }
 
+/* ipmi_sdr_print_entry_by_id  -  print sdr entries identified by sensor id
+ *
+ * @intf:	ipmi interface
+ * @id_arr:	record id of sensor
+ *
+ * returns struct sdr_record_list *
+ */
+struct sdr_record_list *
+ipmi_sdr_print_entry_by_id_record(struct ipmi_intf *intf, char *id_arr)
+{
+	int auto_detected = 0;
+
+	int id = strtol(id_arr, NULL, auto_detected);
+
+	return ipmi_sdr_find_sdr_by_id_record(intf, id);
+}
+
+/* ipmi_sdr_print_entry_by_id_string  -  print sdr entries
+ *
+ * @intf:	ipmi interface
+ * @id_arr:	identical name of sensor
+ *
+ * returns struct sdr_record_list *
+ */
+struct sdr_record_list *
+ipmi_sdr_print_entry_by_id_string(struct ipmi_intf *intf, char *id_arr)
+{
+	return ipmi_sdr_find_sdr_byid(intf, id_arr);
+}
+
+/* ipmi_sdr_print_entry  -  print sdr entries identified by sensor id
+ *
+ * @intf:	ipmi interface
+ * @argc:	number of entries to print
+ * @argv:	list of sensor ids
+ *
+ * returns 0 on success
+ * returns -1 on error
+ */
+static int
+ipmi_sdr_print_entry(struct ipmi_intf *intf, int argc, char **argv)
+{
+	struct sdr_record_list *sdr;
+	int rc = 0;
+	int v, i;
+
+	if (argc < 1) {
+		lprintf(LOG_ERR, "No Sensor ID supplied");
+		return -1;
+	}
+
+	v = verbose;
+	verbose = 1;
+
+	for (i = 0; i < argc; i++) {
+		if(sdr_is_record_id(argv[i])){
+			sdr = ipmi_sdr_print_entry_by_id_record(intf, argv[i]);
+		} else {
+			sdr = ipmi_sdr_print_entry_by_id_string(intf, argv[i]);
+		}
+
+		if (!sdr) {
+			lprintf(LOG_ERR, "Unable to find sensor id '%s'",
+				argv[i]);
+		} else {
+			if (ipmi_sdr_print_listentry(intf, sdr) < 0)
+				rc = -1;
+		}
+	}
+
+	verbose = v;
+
+	return rc;
+}
+
 /* ipmi_sdr_print_entry_byid  -  print sdr entries identified by sensor id
  *
  * @intf:	ipmi interface
@@ -4799,7 +5030,7 @@ ipmi_sdr_main(struct ipmi_intf *intf, int argc, char **argv)
 	} else if (!strcmp(argv[0], "info")) {
 		rc = ipmi_sdr_print_info(intf);
 	} else if (!strcmp(argv[0], "get")) {
-		rc = ipmi_sdr_print_entry_byid(intf, argc - 1, &argv[1]);
+		rc = ipmi_sdr_print_entry(intf, argc - 1, &argv[1]);
 	} else if (!strcmp(argv[0], "dump")) {
 		if (argc < 2) {
 			lprintf(LOG_ERR, "Not enough parameters given.");
