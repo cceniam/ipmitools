@@ -879,6 +879,28 @@ ipmi_sensor_set_threshold(struct ipmi_intf *intf, int argc, char **argv)
 
 	return ret;
 }
+/* ipmi_sensor_find_byid  -  print sdr entries identified by sensor id
+ *
+ * @intf:	ipmi interface
+ * @id_arr:	record id of sensor
+ *
+ * returns struct sdr_record_list *
+ */
+struct sdr_record_list *
+ipmi_sensor_find_sensor_byid(struct ipmi_intf *intf, char *id_arr)
+{
+	struct sdr_record_list *sdr;
+	if(sdr_is_record_id(id_arr)){
+		int auto_detected = 0;
+		int id = strtol(id_arr, NULL, auto_detected);
+
+		sdr =  ipmi_sdr_find_sdr_by_id_record(intf, id);
+	} else {
+		sdr = ipmi_sdr_find_sdr_byid(intf, id_arr);
+	}
+
+	return sdr;
+}
 
 static int
 ipmi_sensor_get_reading(struct ipmi_intf *intf, int argc, char **argv)
@@ -893,7 +915,7 @@ ipmi_sensor_get_reading(struct ipmi_intf *intf, int argc, char **argv)
 	}
 
 	for (i = 0; i < argc; i++) {
-		sdr = ipmi_sdr_find_sdr_byid(intf, argv[i]);
+		sdr = ipmi_sensor_find_sensor_byid(intf, argv[i]);
 		if (!sdr) {
 			lprintf(LOG_ERR, "Sensor \"%s\" not found!",
 				argv[i]);
@@ -957,7 +979,7 @@ ipmi_sensor_get(struct ipmi_intf *intf, int argc, char **argv)
 	printf("Locating sensor record...\n");
 	/* lookup by sensor name */
 	for (i = 0; i < argc; i++) {
-		sdr = ipmi_sdr_find_sdr_byid(intf, argv[i]);
+		sdr = ipmi_sensor_find_sensor_byid(intf, argv[i]);
 		if (!sdr) {
 			lprintf(LOG_ERR, "Sensor data record \"%s\" not found!",
 					argv[i]);
