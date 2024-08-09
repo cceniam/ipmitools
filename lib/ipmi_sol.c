@@ -95,6 +95,10 @@ static int            _use_sol_for_keepalive = 0;
 
 extern int verbose;
 
+#ifdef IPMI_INTF_HTTPS
+extern int ipmi_https_sol_main(const char *hostname, const char *password, int port);
+#endif
+
 /*
  * ipmi_sol_payload_access
  */
@@ -1986,7 +1990,14 @@ ipmi_sol_main(struct ipmi_intf * intf, int argc, char ** argv)
 		}
 		retval = ipmi_sol_set_param(intf, channel, argv[1], argv[2], guard);
 	} else if (!strcmp(argv[0], "activate")) {
+#ifdef IPMI_INTF_HTTPS
 		/* Activate */
+		if (!strncmp(intf->name, "https", 5))
+		{
+			intf->close(intf); // close curl /ipmi url session
+			return ipmi_https_sol_main(intf->ssn_params.hostname, (char*)intf->ssn_params.authcode_set, intf->ssn_params.port);
+		}
+#endif
 		int i;
 		uint8_t instance = 1;
 		for (i = 1; i < argc; i++) {
