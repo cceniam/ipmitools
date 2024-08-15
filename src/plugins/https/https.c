@@ -42,6 +42,9 @@
 #define IPMI_HTTPS_PORT 443
 #define IPMI_HTTPS_TIMEOUT 5
 #define MAX_RESPONSE_BYTES 256
+#define CCODE_LEN 1
+#define IPMI_MSG_RSP_HEADER_LEN 7
+#define CHECKSUM_LEN 1
 
 static CURL *curl;
 static bool curl_global_init_done;
@@ -79,21 +82,88 @@ struct ipmi_rq_header {
 	uint16_t data_len;
 };
 
-static int ipmi_https_send_request(struct ipmi_rq * req, struct ipmi_rs * rsp)
+static int ipmi_https_send_request(struct ipmi_intf *intf, struct ipmi_rq * req, struct ipmi_rs * rsp)
 {
 	size_t sent;
 	uint8_t req_data[256];
+	uint8_t bridge_req_data[256];
 	size_t rlen;
 	const struct curl_ws_frame *meta;
 	uint8_t buffer[256] = {0};
 	CURLcode result;
+	int len = 0;
+	int cs = 0;
+	int tmp = 0;
+	int is_bridge_command = 0;
 
 	lprintf(LOG_DEBUG, "ipmitool: https: sending request: netfn=0x%02x, lun=0x%02x, cmd=0x%02x, target_cmd=0x%02x, data_len=0x%04x",
 			req->msg.netfn, req->msg.lun, req->msg.cmd, req->msg.target_cmd, req->msg.data_len);
 
-	// TODO: check overflow
-	memcpy(&req_data[0], req, sizeof(struct ipmi_rq_header));
-	memcpy(&req_data[sizeof(struct ipmi_rq_header)], req->msg.data, req->msg.data_len);
+	uint8_t ourAddress = intf->my_addr;
+
+	if (ourAddress == 0)
+		ourAddress = IPMI_BMC_SLAVE_ADDR;
+
+	if (intf->target_addr != ourAddress)
+	{
+		is_bridge_command = 1;
+	}
+
+	if (!is_bridge_command)
+	{
+		if (sizeof(req_data) < sizeof(struct ipmi_rq_header) + req->msg.data_len)
+		{
+			return -1;
+		}
+		memcpy(&req_data[0], req, sizeof(struct ipmi_rq_header));
+		memcpy(&req_data[sizeof(struct ipmi_rq_header)], req->msg.data, req->msg.data_len);
+	}
+	else
+	{
+		// bridge command
+		bridge_req_data[len++] = (0x40 | intf->target_channel);
+		cs = len;
+		bridge_req_data[len++] = intf->target_addr;
+		bridge_req_data[len++] = req->msg.netfn << 2 | (req->msg.lun & 3);
+
+		/* checksum */
+		tmp = len - cs;
+		bridge_req_data[len++] = ipmi_csum(bridge_req_data + cs, tmp);
+		cs = len;
+
+		bridge_req_data[len++] = IPMI_REMOTE_SWID;
+		bridge_req_data[len++] = 0; // rqSeq / rqLUN,  Https interface don't need this.
+
+		/* cmd */
+		bridge_req_data[len++] = req->msg.cmd;
+
+		/* message data */
+		if (req->msg.data_len)
+		{
+			if (sizeof(bridge_req_data) - len < req->msg.data_len)
+			{
+				return -1;
+			}
+			memcpy(bridge_req_data + len, req->msg.data, req->msg.data_len);
+			len += req->msg.data_len;
+		}
+
+		/* second checksum */
+		tmp = len - cs;
+		bridge_req_data[len++] = ipmi_csum(bridge_req_data + cs, tmp);
+
+		req->msg.target_cmd = req->msg.cmd;
+		req->msg.netfn = IPMI_NETFN_APP;
+		req->msg.cmd = 0x34; /* Send Message rqst */
+		req->msg.data_len = len;
+
+		if (sizeof(req_data) < sizeof(struct ipmi_rq_header) + req->msg.data_len)
+		{
+			return -1;
+		}
+		memcpy(&req_data[0], req, sizeof(struct ipmi_rq_header));
+		memcpy(&req_data[sizeof(struct ipmi_rq_header)], bridge_req_data, len);
+	}
 
 	lprintf(LOG_DEBUG, "ipmitool: wss raw data: %s", buf2str(req_data, sizeof(struct ipmi_rq_header) + req->msg.data_len));
 
@@ -106,6 +176,7 @@ static int ipmi_https_send_request(struct ipmi_rq * req, struct ipmi_rs * rsp)
 
 	// TODO: retry until we get the response, timeout is 1 second
 	while (1) {
+
 		result = curl_ws_recv(curl, buffer, sizeof(buffer), &rlen, &meta);
 		if (result == CURLE_OK) {
 			break;
@@ -123,8 +194,25 @@ static int ipmi_https_send_request(struct ipmi_rq * req, struct ipmi_rs * rsp)
 	lprintf(LOG_DEBUG, "ipmitool: wss raw data: %s", buf2str(buffer, rlen));
 
 	rsp->ccode = buffer[0];
-	memcpy(rsp->data, &buffer[1], rlen - 1);
-	rsp->data_len = rlen - 1;
+
+	if (!is_bridge_command)
+	{
+		if (sizeof(rsp->data) < rlen - CCODE_LEN)
+		{
+			return -1;
+		}
+		memcpy(rsp->data, &buffer[CCODE_LEN], rlen - CCODE_LEN);
+		rsp->data_len = rlen - CCODE_LEN;
+	}
+	else
+	{
+		if (sizeof(rsp->data) < rlen - CCODE_LEN - IPMI_MSG_RSP_HEADER_LEN - CHECKSUM_LEN)
+		{
+			return -1;
+		}
+		memcpy(rsp->data, &buffer[CCODE_LEN + IPMI_MSG_RSP_HEADER_LEN], rlen - CCODE_LEN - IPMI_MSG_RSP_HEADER_LEN - CHECKSUM_LEN);
+		rsp->data_len = rlen - CCODE_LEN - IPMI_MSG_RSP_HEADER_LEN - CHECKSUM_LEN;
+	}
 
 	return 0;
 }
@@ -147,7 +235,7 @@ ipmi_https_sendrecv(struct ipmi_intf *intf,
 	rsp.data_len = 0;
 	memset(rsp.data, 0, sizeof(rsp.data));
 
-	if (ipmi_https_send_request(req, &rsp) == 0)
+	if (ipmi_https_send_request(intf, req, &rsp) == 0)
     {
         ipmi_response = &rsp;
     }
@@ -290,4 +378,5 @@ struct ipmi_intf ipmi_https_intf = {
 	.open = ipmi_https_open,
 	.close = ipmi_https_close,
 	.sendrecv = ipmi_https_sendrecv,
+	.target_addr = IPMI_BMC_SLAVE_ADDR,
 };
