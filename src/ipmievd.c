@@ -732,7 +732,7 @@ ipmievd_main(struct ipmi_event_intf * eintf, int argc, char ** argv)
 				return (-1);
 			}
 		}
-		else if (strcasecmp(argv[i], PIDFILE_OPT) == 0) {
+		else if (strncasecmp(argv[i], PIDFILE_OPT, PIDFILE_OPT_LEN) == 0) {
 			const char *pidArg = argv[i]+PIDFILE_OPT_LEN;
 			size_t pidArgLen = strnlen(pidArg, sizeof(pidfile));
 			if (pidArgLen == sizeof(pidfile)) {
