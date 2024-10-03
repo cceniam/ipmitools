@@ -54,8 +54,8 @@
 # include <paths.h>
 #endif
 
-#ifndef _PATH_RUN
-# define _PATH_RUN "/run/"
+#ifndef _PATH_VARRUN
+# define _PATH_VARRUN "/run/"
 #endif
 
 #ifdef IPMI_INTF_OPEN
@@ -82,7 +82,7 @@
 #include <ipmitool/ipmi_main.h>
 
 #define WARNING_THRESHOLD	80
-#define DEFAULT_PIDFILE		_PATH_RUN "ipmievd.pid"
+#define DEFAULT_PIDFILE		_PATH_VARRUN "ipmievd.pid"
 #define PIDFILE_OPT "pidfile="
 #define PIDFILE_OPT_LEN (sizeof(PIDFILE_OPT) - 1)
 static char pidfile[64];
