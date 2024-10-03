@@ -741,7 +741,7 @@ ipmievd_main(struct ipmi_event_intf * eintf, int argc, char ** argv)
 					sizeof(pidfile) - 1);
 				return (-1);
 			}
-			strncpy(pidfile, pidArg, pidArgLen);
+			strncpy(pidfile, pidArg, pidArgLen + 1);
 		}
 	}
 
