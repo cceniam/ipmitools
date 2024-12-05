@@ -199,13 +199,14 @@ get_bmc_ip()
 	#Thanks to http://ingvar.blog.redpill-linpro.com
 	for CHANNEL in `seq 1 14`
 	do
-		[ $(${IPMI_TOOL} lan print ${CHANNEL} 2>/dev/null \
-			| grep -q "^Set") ] || break
-	done
+		# Get BMC_IPv4 and BMC_URL from BMC
+		TMP_IPv4=$(${IPMI_TOOL} lan print ${CHANNEL} 2>/dev/null \
+			| grep "^IP Address  .*:" | sed -n "s#^IP Address  .*: ##p")
 
-	# Get BMC_IPv4 and BMC_URL from BMC
-	TMP_IPv4=$(${IPMI_TOOL} lan print ${CHANNEL} 2>/dev/null \
-			| sed -n "s#^IP Address  .*: ##p")
+		if [ -n "${TMP_IPv4}" ];then
+			break
+		fi
+	done
 
 	valid_ip && BMC_IPv4=${TMP_IPv4} || BMC_IPv4=""
 }
