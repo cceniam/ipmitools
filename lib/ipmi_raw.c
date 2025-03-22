@@ -188,6 +188,7 @@ static void rawi2c_usage(void)
 	lprintf(LOG_NOTICE, "usage: i2c [bus=public|# [chan=#] <i2caddr> <read bytes> [write data]");
 	lprintf(LOG_NOTICE, "            bus=public is default");
 	lprintf(LOG_NOTICE, "            chan=0 is default, bus= must be specified to use chan=");
+	lprintf(LOG_NOTICE, "            i2caddr is an 8-bit I2C address, only even numbers are accepted");
 }
 
 #define BUS_KW "bus="
@@ -240,8 +241,8 @@ ipmi_rawi2c_main(struct ipmi_intf * intf, int argc, char ** argv)
 	if (is_valid_param(argv[i++], &rsize, "read size") != 0)
 		return (-1);
 
-	if (i2caddr == 0) {
-		lprintf(LOG_ERR, "Invalid I2C address 0");
+	if (i2caddr == 0 || (i2caddr & 1)) {
+		lprintf(LOG_ERR, "Invalid I2C address");
 		rawi2c_usage();
 		return -1;
 	}
