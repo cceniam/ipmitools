@@ -930,7 +930,7 @@ const struct oemvalstr ipmi_oem_product_info[] = {
    { IPMI_OEM_YADRO, 0x0001, "VESNIN BMC" },
    { IPMI_OEM_YADRO, 0x000A, "TATLIN.UNIFIED Storage Controller BMC" },
    { IPMI_OEM_YADRO, 0x0014, "VEGMAN Series BMC" },
-   { IPMI_OEM_YADRO, 0x0015, "TATLIN.ARCHIVE/xS BMC" },
+   { IPMI_OEM_YADRO, 0x0015, "TATLIN Series Storage Controller BMC" },
 
    { 0xffffff        , 0xffff , NULL },
  };

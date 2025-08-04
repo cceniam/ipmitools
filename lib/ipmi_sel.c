@@ -2042,13 +2042,13 @@ ipmi_sel_print_std_entry_verbose(struct ipmi_intf * intf, struct sel_event_recor
 	if (evt->record_type < 0xe0)
 	{
 		printf(" Timestamp             : ");
-		if (evt->record_type < 0xc0)
-			printf("%s %s", ipmi_timestamp_date(evt->sel_type.standard_type.timestamp),
-				ipmi_timestamp_time(evt->sel_type.standard_type.timestamp));
-		else
-			printf("%s %s", ipmi_timestamp_date(evt->sel_type.oem_ts_type.timestamp),
-				ipmi_timestamp_time(evt->sel_type.oem_ts_type.timestamp));
-		printf("\n");
+		if (evt->record_type < 0xc0) {
+			printf("%s ", ipmi_timestamp_date(evt->sel_type.standard_type.timestamp));
+			printf("%s\n", ipmi_timestamp_time(evt->sel_type.standard_type.timestamp));
+		} else {
+			printf("%s ", ipmi_timestamp_date(evt->sel_type.oem_ts_type.timestamp));
+			printf("%s\n", ipmi_timestamp_time(evt->sel_type.oem_ts_type.timestamp));
+		}
 	}
 
 	if (evt->record_type >= 0xc0)
@@ -2133,8 +2133,8 @@ ipmi_sel_print_extended_entry_verbose(struct ipmi_intf * intf, struct sel_event_
 	if (evt->record_type < 0xe0)
 	{
 		printf(" Timestamp             : ");
-		printf("%s %s\n", ipmi_timestamp_date(evt->sel_type.standard_type.timestamp),
-		ipmi_timestamp_time(evt->sel_type.standard_type.timestamp));
+		printf("%s ", ipmi_timestamp_date(evt->sel_type.standard_type.timestamp));
+		printf("%s\n", ipmi_timestamp_time(evt->sel_type.standard_type.timestamp));
 	}
 
 

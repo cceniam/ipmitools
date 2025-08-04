@@ -62,5 +62,3 @@ struct rmcp_hdr {
 #if HAVE_PRAGMA_PACK
 #pragma pack(pop)
 #endif
-
-int handle_rmcp(struct ipmi_intf * intf, uint8_t * data, int data_len);
