@@ -1049,7 +1049,7 @@ get_bootparam_options(char *optstring,
 			optionError = 1;
 			break;
 		}
-		if (!strcmp(token, "no-")) {
+		if (strncmp(token, "no-", 3) == 0) {
 			setbit = 1;
 			token += 3;
 		}
@@ -1266,6 +1266,11 @@ ipmi_chassis_set_bootdev(struct ipmi_intf * intf, char * arg, uint8_t *iflags)
 		!strcmp(arg, "force_cdrom"))
 	{
 		flags[1] |= 0x14;
+	}
+	else if (!strcmp(arg, "remotecd") ||
+	         !strcmp(arg, "force_remotecd"))
+	{
+		flags[1] |= 0x20;
 	}
 	else if (!strcmp(arg, "floppy") ||
 		!strcmp(arg, "force_floppy"))
@@ -1684,13 +1689,14 @@ ipmi_chassis_set_bootflag_help()
 	unsigned char clr_flag;
 	lprintf(LOG_NOTICE, "bootparam set bootflag <device> [options=...]");
 	lprintf(LOG_NOTICE, " Legal devices are:");
-	lprintf(LOG_NOTICE, "  none        : No override");
-	lprintf(LOG_NOTICE, "  force_pxe   : Force PXE boot");
-	lprintf(LOG_NOTICE, "  force_disk  : Force boot from default Hard-drive");
-	lprintf(LOG_NOTICE, "  force_safe  : Force boot from default Hard-drive, request Safe Mode");
-	lprintf(LOG_NOTICE, "  force_diag  : Force boot from Diagnostic Partition");
-	lprintf(LOG_NOTICE, "  force_cdrom : Force boot from CD/DVD");
-	lprintf(LOG_NOTICE, "  force_bios  : Force boot into BIOS Setup");
+	lprintf(LOG_NOTICE, "  none           : No override");
+	lprintf(LOG_NOTICE, "  force_pxe      : Force PXE boot");
+	lprintf(LOG_NOTICE, "  force_disk     : Force boot from default Hard-drive");
+	lprintf(LOG_NOTICE, "  force_safe     : Force boot from default Hard-drive, request Safe Mode");
+	lprintf(LOG_NOTICE, "  force_diag     : Force boot from Diagnostic Partition");
+	lprintf(LOG_NOTICE, "  force_cdrom    : Force boot from CD/DVD");
+	lprintf(LOG_NOTICE, "  force_bios     : Force boot into BIOS Setup");
+	lprintf(LOG_NOTICE, "  force_remotecd : Force boot from remote CD/DVD");
 	get_bootparam_options("options=help", &set_flag, &clr_flag);
 }
 
@@ -2035,14 +2041,15 @@ ipmi_chassis_main(struct ipmi_intf * intf, int argc, char ** argv)
 		if (argc < 2 || !strcmp(argv[1], "help")) {
 			lprintf(LOG_NOTICE, "bootdev <device> [clear-cmos=yes|no]");
 			lprintf(LOG_NOTICE, "bootdev <device> [options=help,...]");
-			lprintf(LOG_NOTICE, "  none  : Do not change boot device order");
-			lprintf(LOG_NOTICE, "  pxe   : Force PXE boot");
-			lprintf(LOG_NOTICE, "  disk  : Force boot from default Hard-drive");
-			lprintf(LOG_NOTICE, "  safe  : Force boot from default Hard-drive, request Safe Mode");
-			lprintf(LOG_NOTICE, "  diag  : Force boot from Diagnostic Partition");
-			lprintf(LOG_NOTICE, "  cdrom : Force boot from CD/DVD");
-			lprintf(LOG_NOTICE, "  bios  : Force boot into BIOS Setup");
-			lprintf(LOG_NOTICE, "  floppy: Force boot from Floppy/primary removable media");
+			lprintf(LOG_NOTICE, "  none     : Do not change boot device order");
+			lprintf(LOG_NOTICE, "  pxe      : Force PXE boot");
+			lprintf(LOG_NOTICE, "  disk     : Force boot from default Hard-drive");
+			lprintf(LOG_NOTICE, "  safe     : Force boot from default Hard-drive, request Safe Mode");
+			lprintf(LOG_NOTICE, "  diag     : Force boot from Diagnostic Partition");
+			lprintf(LOG_NOTICE, "  cdrom    : Force boot from CD/DVD");
+			lprintf(LOG_NOTICE, "  bios     : Force boot into BIOS Setup");
+			lprintf(LOG_NOTICE, "  floppy   : Force boot from Floppy/primary removable media");
+			lprintf(LOG_NOTICE, "  remotecd : Force boot from remote CD/DVD");
 		} else {
 			static const char *kw = "options=";
 			char *optstr = NULL;

@@ -172,7 +172,7 @@ const struct dcmi_cmd dcmi_temp_monitoring_vals[] = {
 	DCMI_CMD_END(0xFF)
 };
 
-/* These are not comands.  These are the DCMI temp sensors and their numbers
+/* These are not commands.  These are the DCMI temp sensors and their numbers
  * If new sensors are added, they need to be added to this list with their
  * sensor number
  */
@@ -1509,7 +1509,7 @@ int
 ipmi_dcmi_setthermalpolicy(struct ipmi_intf * intf,
                            uint8_t entityID,
                            uint8_t entityInst,
-                           uint8_t persistanceFlag,
+                           uint8_t persistenceFlag,
                            uint8_t actionHardPowerOff,
                            uint8_t actionLogToSEL,
                            uint8_t tempLimit,
@@ -1524,7 +1524,7 @@ ipmi_dcmi_setthermalpolicy(struct ipmi_intf * intf,
 	msg_data[1] = entityID; /* Inlet Temperature DCMI ID*/
 	msg_data[2] = entityInst; /* Entity Instance */
 	/* persistence and actions or disabled if no actions */
-	msg_data[3] = (((persistanceFlag ? 1 : 0) << 7) |
+	msg_data[3] = (((persistenceFlag ? 1 : 0) << 7) |
 	               ((actionHardPowerOff? 1 : 0) << 6) |
 	               ((actionLogToSEL ? 1 : 0) << 5));
 	msg_data[4] = tempLimit;
@@ -3585,7 +3585,7 @@ ipmi_dcmi_thermalpolicy(struct ipmi_intf * intf, int argc, char **argv)
 	int rc = 0;
 	uint8_t entityID = 0;
 	uint8_t entityInst = 0;
-	uint8_t persistanceFlag;
+	uint8_t persistenceFlag;
 	uint8_t actionHardPowerOff;
 	uint8_t actionLogToSEL;
 	uint8_t tempLimit = 0;
@@ -3639,7 +3639,7 @@ ipmi_dcmi_thermalpolicy(struct ipmi_intf * intf, int argc, char **argv)
 			        argv[3]);
 			return (-1);
 		}
-		persistanceFlag = (uint8_t) str2val2(argv[4], dcmi_thermalpolicy_set_parameters_vals);
+		persistenceFlag = (uint8_t) str2val2(argv[4], dcmi_thermalpolicy_set_parameters_vals);
 		actionHardPowerOff = (uint8_t) str2val2(argv[5], dcmi_thermalpolicy_set_parameters_vals);
 		actionLogToSEL = (uint8_t) str2val2(argv[6], dcmi_thermalpolicy_set_parameters_vals);
 		if (str2uchar(argv[7], &tempLimit) != 0) {
@@ -3660,7 +3660,7 @@ ipmi_dcmi_thermalpolicy(struct ipmi_intf * intf, int argc, char **argv)
 		rc = ipmi_dcmi_setthermalpolicy(intf,
 			entityID,
 			entityInst,
-			persistanceFlag,
+			persistenceFlag,
 			actionHardPowerOff,
 			actionLogToSEL,
 			tempLimit,

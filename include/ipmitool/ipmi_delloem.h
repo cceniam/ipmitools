@@ -8,12 +8,12 @@ this list of conditions and the following disclaimer.
 
 - Redistributions in binary form must reproduce the above copyright notice,
 this list of conditions and the following disclaimer in the documentation
-and/or other materials provided with the distribution. 
+and/or other materials provided with the distribution.
 - Neither the name of Dell Inc nor the names of its contributors
-may be used to endorse or promote products derived from this software 
-without specific prior written permission. 
+may be used to endorse or promote products derived from this software
+without specific prior written permission.
 THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE 
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
 IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
 ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
 LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
@@ -22,7 +22,7 @@ SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
 INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
 CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
 ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
-POSSIBILITY OF SUCH DAMAGE. 
+POSSIBILITY OF SUCH DAMAGE.
 
 
 *****************************************************************************/
@@ -33,7 +33,6 @@ POSSIBILITY OF SUCH DAMAGE.
 # include <config.h>
 #endif
 
-#pragma pack(1)
 
 #define MIN(a,b) ((a) < (b) ? (a) : (b))
 #define MAX(a,b) ((a) > (b) ? (a) : (b))
@@ -51,12 +50,12 @@ POSSIBILITY OF SUCH DAMAGE.
 #define IPMI_DELL_LCD_CONFIG_USER_DEFINED   0x00 /* use string set by user*/
 #define IPMI_DELL_LCD_CONFIG_DEFAULT        0x01 /* use platform model name*/
 #define IPMI_DELL_LCD_CONFIG_NONE           0x02 /* blank*/
-#define IPMI_DELL_LCD_iDRAC_IPV4ADRESS      0x04 /* use string set by user*/
+#define IPMI_DELL_LCD_iDRAC_IPV4ADDRESS     0x04 /* use string set by user*/
 #define IPMI_DELL_LCD_IDRAC_MAC_ADDRESS     0x08 /* use platform model name*/
 #define IPMI_DELL_LCD_OS_SYSTEM_NAME        0x10 /* blank*/
 
 #define IPMI_DELL_LCD_SERVICE_TAG           0x20  /* use string set by user*/
-#define IPMI_DELL_LCD_iDRAC_IPV6ADRESS      0x40  /* use string set by user*/
+#define IPMI_DELL_LCD_iDRAC_IPV6ADDRESS     0x40  /* use string set by user*/
 #define IPMI_DELL_LCD_AMBEINT_TEMP          0x80  /* use platform model name*/
 #define IPMI_DELL_LCD_SYSTEM_WATTS          0x100 /* blank*/
 #define IPMI_DELL_LCD_ASSET_TAG             0x200
@@ -64,8 +63,8 @@ POSSIBILITY OF SUCH DAMAGE.
 #define IPMI_DELL_LCD_ERROR_DISP_SEL        0x01  /* use platform model name*/
 #define IPMI_DELL_LCD_ERROR_DISP_VERBOSE    0x02  /* blank*/
 
-#define IPMI_DELL_IDRAC_VALIDATOR           0xDD    
-#define IPMI_DELL_POWER_CAP_STATUS          0xBA   
+#define IPMI_DELL_IDRAC_VALIDATOR           0xDD
+#define IPMI_DELL_POWER_CAP_STATUS          0xBA
 #define IPMI_DELL_AVG_POWER_CONSMP_HST 	0xEB
 #define IPMI_DELL_PEAK_POWER_CONSMP_HST 0xEC
 #define SYSTEM_BOARD_SYSTEM_LEVEL_SENSOR_NUM 0x98
@@ -79,9 +78,12 @@ POSSIBILITY OF SUCH DAMAGE.
 #define btuphr              0x01
 #define watt                0x00
 #define IPMI_DELL_POWER_CAP 0xEA
-#define percent             0x03 
+#define percent             0x03
 
 /* Not on all Dell servers. If there, use it.*/
+#if HAVE_PRAGMA_PACK
+#pragma pack(push, 1)
+#endif
 typedef struct _tag_ipmi_dell_lcd_caps
 {
        uint8_t parm_rev;                                       /* 0x11 for IPMI 2.0 */
@@ -89,7 +91,10 @@ typedef struct _tag_ipmi_dell_lcd_caps
    uint8_t number_lines;                           /* 0-4, 1 for 9G. 10G tbd */
    uint8_t max_chars[4];                           /* 62 for triathlon, 0 if not present (glacier) */
                                                                              /* [0] is max chars for line 1 */
-}IPMI_DELL_LCD_CAPS;
+} ATTRIBUTE_PACKING IPMI_DELL_LCD_CAPS;
+#if HAVE_PRAGMA_PACK
+#pragma pack(pop)
+#endif
 
 #define IPMI_DELL_LCD_STRING_LENGTH_MAX 62      /* Valid for 9G. Glacier ??. */
 #define IPMI_DELL_LCD_STRING1_SIZE      14
@@ -99,13 +104,16 @@ typedef struct _tag_ipmi_dell_lcd_caps
 #define IPMI_GET_EXT_SD_CARD_INFO 0xA4
 
 
+#if HAVE_PRAGMA_PACK
+#pragma pack(push, 1)
+#endif
 typedef struct _tag_ipmi_dell_lcd_string
 {
      uint8_t parm_rev;                       /* 0x11 for IPMI 2.0 */
      uint8_t data_block_selector;            /* 16-byte data block number to access, 0 based.*/
-     union 
+     union
      {
-          struct 
+          struct
           {
                 uint8_t encoding : 4;                     /* 0 is printable ASCII 7-bit */
                 uint8_t length;                           /* 0 to max chars from lcd caps */
@@ -113,17 +121,23 @@ typedef struct _tag_ipmi_dell_lcd_string
           }selector_0_string;
           uint8_t selector_n_data[IPMI_DELL_LCD_STRINGN_SIZE];
      }lcd_string;
-} __attribute__ ((packed)) IPMI_DELL_LCD_STRING;
+} ATTRIBUTE_PACKING IPMI_DELL_LCD_STRING;
+#if HAVE_PRAGMA_PACK
+#pragma pack(pop)
+#endif
 
 /* Only found on servers with more than 1 line. Use if available. */
+#if HAVE_PRAGMA_PACK
+#pragma pack(push, 1)
+#endif
 typedef struct _tag_ipmi_dell_lcd_stringex
 {
       uint8_t parm_rev;                       /* 0x11 for IPMI 2.0 */
       uint8_t line_number;                    /* LCD line number 1 to 4 */
       uint8_t data_block_selector;            /* 16-byte data block number to access, 0 based.*/
-      union 
+      union
       {
-           struct  
+           struct
            {
                 uint8_t encoding : 4;                     /* 0 is printable ASCII 7-bit */
                 uint8_t length;                           /* 0 to max chars from lcd caps */
@@ -131,9 +145,15 @@ typedef struct _tag_ipmi_dell_lcd_stringex
            } selector_0_string;
            uint8_t selector_n_data[IPMI_DELL_LCD_STRINGN_SIZE];
    } lcd_string;
-} __attribute__ ((packed)) IPMI_DELL_LCD_STRINGEX;
+} ATTRIBUTE_PACKING IPMI_DELL_LCD_STRINGEX;
+#if HAVE_PRAGMA_PACK
+#pragma pack(pop)
+#endif
 
 
+#if HAVE_PRAGMA_PACK
+#pragma pack(push, 1)
+#endif
 typedef struct _lcd_status
 {
       char parametersel;
@@ -141,17 +161,26 @@ typedef struct _lcd_status
       char lock_status;
       char Resv1;
       char Resv;
-} __attribute__ ((packed)) LCD_STATUS;
+} ATTRIBUTE_PACKING LCD_STATUS;
+#if HAVE_PRAGMA_PACK
+#pragma pack(pop)
+#endif
 
+#if HAVE_PRAGMA_PACK
+#pragma pack(push, 1)
+#endif
 typedef struct _lcd_mode
 {
     uint8_t parametersel;
     uint32_t lcdmode;
     uint16_t lcdquallifier;
-    uint32_t capabilites;
+    uint32_t capabilities;
     uint8_t error_display;
     uint8_t Resv;
-} __attribute__ ((packed)) LCD_MODE;
+} ATTRIBUTE_PACKING LCD_MODE;
+#if HAVE_PRAGMA_PACK
+#pragma pack(pop)
+#endif
 
 #define PARAM_REV_OFFSET                    (uint8_t)(0x1)
 #define VIRTUAL_MAC_OFFSET                  (uint8_t)(0x1)
@@ -175,7 +204,7 @@ typedef struct _lcd_mode
 #define EMB_NIC_MAC_ADDRESS_11G     (uint8_t)(0xDA)
 #define EMB_NIC_MAC_ADDRESS_9G_10G  (uint8_t)(0xCB)
 
-#define IMC_IDRAC_10G               (uint8_t) (0x08) 
+#define IMC_IDRAC_10G               (uint8_t) (0x08)
 #define IMC_CMC                     (uint8_t) (0x09)
 #define IMC_IDRAC_11G_MONOLITHIC    (uint8_t) (0x0A)
 #define IMC_IDRAC_11G_MODULAR       (uint8_t) (0x0B)
@@ -190,6 +219,9 @@ typedef struct _lcd_mode
 #define IMC_IDRAC_13G_DCS			(uint8_t) (0x22)
 
 
+#if HAVE_PRAGMA_PACK
+#pragma pack(push, 1)
+#endif
 typedef struct
 {
      unsigned int BladSlotNumber : 4;
@@ -198,23 +230,44 @@ typedef struct
      unsigned int NICNumber : 5;
      unsigned int Reserved : 3;
      uint8_t MacAddressByte[MACADDRESSLENGH];
-} LOMMacAddressType;
+} ATTRIBUTE_PACKING LOMMacAddressType;
+#if HAVE_PRAGMA_PACK
+#pragma pack(pop)
+#endif
 
 
+#if HAVE_PRAGMA_PACK
+#pragma pack(push, 1)
+#endif
 typedef struct
 {
      LOMMacAddressType LOMMacAddress [MAX_LOM];
-} EmbeddedNICMacAddressType;
+} ATTRIBUTE_PACKING EmbeddedNICMacAddressType;
+#if HAVE_PRAGMA_PACK
+#pragma pack(pop)
+#endif
 
+#if HAVE_PRAGMA_PACK
+#pragma pack(push, 1)
+#endif
 typedef struct
 {
      uint8_t MacAddressByte[MACADDRESSLENGH];
-} MacAddressType;
+} ATTRIBUTE_PACKING MacAddressType;
+#if HAVE_PRAGMA_PACK
+#pragma pack(pop)
+#endif
 
+#if HAVE_PRAGMA_PACK
+#pragma pack(push, 1)
+#endif
 typedef struct
 {
    MacAddressType MacAddress [MAX_LOM];
-} EmbeddedNICMacAddressType_10G;
+} ATTRIBUTE_PACKING EmbeddedNICMacAddressType_10G;
+#if HAVE_PRAGMA_PACK
+#pragma pack(pop)
+#endif
 
 
 
@@ -228,15 +281,15 @@ typedef struct
 #define TOTAL_N0_NICS_INDEX         (uint8_t)(0x1)
 
 
-// 12g supported 
+// 12g supported
 #define SET_NIC_SELECTION_12G_CMD       (uint8_t)(0x28)
 #define GET_NIC_SELECTION_12G_CMD       (uint8_t)(0x29)
 
-// 11g supported 
+// 11g supported
 #define SET_NIC_SELECTION_CMD       (uint8_t)(0x24)
 #define GET_NIC_SELECTION_CMD       (uint8_t)(0x25)
 #define GET_ACTIVE_NIC_CMD          (uint8_t)(0xc1)
-#define POWER_EFFICENCY_CMD     		(uint8_t)(0xc0)
+#define POWER_EFFICIENCY_CMD     		(uint8_t)(0xc0)
 #define SERVER_POWER_CONSUMPTION_CMD   	(uint8_t)(0x8F)
 
 #define POWER_SUPPLY_INFO           (uint8_t)(0xb0)
@@ -251,6 +304,9 @@ typedef struct
 #define	GET_FRONT_PANEL_INFO_CMD		(uint8_t)0xb5
 
 
+#if HAVE_PRAGMA_PACK
+#pragma pack(push, 1)
+#endif
 typedef struct _ipmi_power_monitor
 {
     uint32_t        cumStartTime;
@@ -260,11 +316,17 @@ typedef struct _ipmi_power_monitor
     uint16_t        ampReading;
     uint32_t        wattPeakTime;
     uint16_t        wattReading;
-} __attribute__ ((packed)) IPMI_POWER_MONITOR;
+} ATTRIBUTE_PACKING IPMI_POWER_MONITOR;
+#if HAVE_PRAGMA_PACK
+#pragma pack(pop)
+#endif
 
 
 #define MAX_POWER_FW_VERSION 8
 
+#if HAVE_PRAGMA_PACK
+#pragma pack(push, 1)
+#endif
 typedef struct _ipmi_power_supply_infoo
 {
 	/*No param_rev it is not a System Information Command */
@@ -272,14 +334,20 @@ typedef struct _ipmi_power_supply_infoo
 	uint16_t ratedAmps;
 	uint16_t ratedVolts;
 	uint32_t vendorid;
-    uint8_t FrimwareVersion[MAX_POWER_FW_VERSION];
+    uint8_t FirmwareVersion[MAX_POWER_FW_VERSION];
 	uint8_t  Powersupplytype;
 	uint16_t ratedDCWatts;
-	uint16_t Resv;	
-                          
-} __attribute__ ((packed)) IPMI_POWER_SUPPLY_INFO;
+	uint16_t Resv;
+
+} ATTRIBUTE_PACKING IPMI_POWER_SUPPLY_INFO;
+#if HAVE_PRAGMA_PACK
+#pragma pack(pop)
+#endif
 
 
+#if HAVE_PRAGMA_PACK
+#pragma pack(push, 1)
+#endif
 typedef struct ipmi_power_consumption_data
 {
     uint16_t actualpowerconsumption;
@@ -289,44 +357,68 @@ typedef struct ipmi_power_consumption_data
     uint16_t maxpowerconsumption;
     uint16_t throttlepowerconsumption;
     uint16_t Resv;
-} __attribute__ ((packed)) IPMI_POWER_CONSUMPTION_DATA;
+} ATTRIBUTE_PACKING IPMI_POWER_CONSUMPTION_DATA;
+#if HAVE_PRAGMA_PACK
+#pragma pack(pop)
+#endif
 
 
+#if HAVE_PRAGMA_PACK
+#pragma pack(push, 1)
+#endif
 typedef struct ipmi_inst_power_consumption_data
 {
     uint16_t instanpowerconsumption;
     uint16_t instanApms;
     uint16_t resv1;
     uint8_t resv;
-} __attribute__ ((packed)) IPMI_INST_POWER_CONSUMPTION_DATA;
+} ATTRIBUTE_PACKING IPMI_INST_POWER_CONSUMPTION_DATA;
+#if HAVE_PRAGMA_PACK
+#pragma pack(pop)
+#endif
 
-typedef struct _ipmi_avgpower_consump_histroy
+#if HAVE_PRAGMA_PACK
+#pragma pack(push, 1)
+#endif
+typedef struct _ipmi_avgpower_consump_history
 {
-    uint8_t parameterselector;  
+    uint8_t parameterselector;
     uint16_t lastminutepower;
     uint16_t lasthourpower;
     uint16_t lastdaypower;
-    uint16_t lastweakpower;  
-                          
-} __attribute__ ((packed)) IPMI_AVGPOWER_CONSUMP_HISTORY;
+    uint16_t lastweakpower;
 
-typedef struct _ipmi_power_consump_histroy
+} ATTRIBUTE_PACKING IPMI_AVGPOWER_CONSUMP_HISTORY;
+#if HAVE_PRAGMA_PACK
+#pragma pack(pop)
+#endif
+
+#if HAVE_PRAGMA_PACK
+#pragma pack(push, 1)
+#endif
+typedef struct _ipmi_power_consump_history
 {
-    uint8_t parameterselector;   
+    uint8_t parameterselector;
     uint16_t lastminutepower;
     uint16_t lasthourpower;
     uint16_t lastdaypower;
-    uint16_t lastweakpower; 
+    uint16_t lastweakpower;
     uint32_t lastminutepowertime;
     uint32_t lasthourpowertime;
     uint32_t lastdaypowertime;
     uint32_t lastweekpowertime;
-} __attribute__ ((packed)) IPMI_POWER_CONSUMP_HISTORY;
+} ATTRIBUTE_PACKING IPMI_POWER_CONSUMP_HISTORY;
+#if HAVE_PRAGMA_PACK
+#pragma pack(pop)
+#endif
 
 
+#if HAVE_PRAGMA_PACK
+#pragma pack(push, 1)
+#endif
 typedef struct _ipmi_delloem_power_cap
-{     
-    uint8_t parameterselector;      
+{
+    uint8_t parameterselector;
     uint16_t PowerCap;
     uint8_t unit;
     uint16_t MaximumPowerConsmp;
@@ -335,14 +427,26 @@ typedef struct _ipmi_delloem_power_cap
     uint16_t AvailablePower ;
     uint16_t SystemThrottling;
     uint16_t Resv;
-} __attribute__ ((packed)) IPMI_POWER_CAP;       
+} ATTRIBUTE_PACKING IPMI_POWER_CAP;
+#if HAVE_PRAGMA_PACK
+#pragma pack(pop)
+#endif
 
+#if HAVE_PRAGMA_PACK
+#pragma pack(push, 1)
+#endif
 typedef struct _power_headroom
-{ 
+{
     uint16_t instheadroom;
     uint16_t peakheadroom;
-} __attribute__ ((packed)) POWER_HEADROOM;
+} ATTRIBUTE_PACKING POWER_HEADROOM;
+#if HAVE_PRAGMA_PACK
+#pragma pack(pop)
+#endif
 
+#if HAVE_PRAGMA_PACK
+#pragma pack(push, 1)
+#endif
 typedef struct ipmi_vFlash_extended_info
 {
 	uint8_t  vflashcompcode;
@@ -351,14 +455,23 @@ typedef struct ipmi_vFlash_extended_info
 	uint32_t sdcardavailsize;
 	uint8_t  bootpartion;
 	uint8_t  Resv;
-} __attribute__ ((packed)) IPMI_DELL_SDCARD_INFO;
+} ATTRIBUTE_PACKING IPMI_DELL_SDCARD_INFO;
+#if HAVE_PRAGMA_PACK
+#pragma pack(pop)
+#endif
 
 
+#if HAVE_PRAGMA_PACK
+#pragma pack(push, 1)
+#endif
 typedef struct _SensorReadingType
 {
     uint8_t sensorReading;
     uint8_t sensorFlags;
     uint16_t sensorState;
-}SensorReadingType;
+} ATTRIBUTE_PACKING SensorReadingType;
+#if HAVE_PRAGMA_PACK
+#pragma pack(pop)
+#endif
 uint16_t compareinputwattage(IPMI_POWER_SUPPLY_INFO* powersupplyinfo, uint16_t inputwattage);
 int ipmi_delloem_main(struct ipmi_intf * intf, int argc, char ** argv);

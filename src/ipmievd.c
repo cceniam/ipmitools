@@ -83,7 +83,9 @@
 
 #define WARNING_THRESHOLD	80
 #define DEFAULT_PIDFILE		_PATH_RUN "ipmievd.pid"
-char pidfile[64];
+#define PIDFILE_OPT "pidfile="
+#define PIDFILE_OPT_LEN (sizeof(PIDFILE_OPT) - 1)
+static char pidfile[64];
 
 /* global variables */
 int verbose = 0;
@@ -701,7 +703,7 @@ ipmievd_main(struct ipmi_event_intf * eintf, int argc, char ** argv)
 	int daemon = 1;
 	struct sigaction act;
 
-	memset(pidfile, 0, 64);
+	memset(pidfile, 0, sizeof(pidfile));
 	sprintf(pidfile, "%s%d", DEFAULT_PIDFILE, eintf->intf->devnum);
 
 	for (i = 0; i < argc; i++) {
@@ -730,10 +732,16 @@ ipmievd_main(struct ipmi_event_intf * eintf, int argc, char ** argv)
 				return (-1);
 			}
 		}
-		else if (strcasecmp(argv[i], "pidfile=") == 0) {
-			memset(pidfile, 0, 64);
-			strncpy(pidfile, argv[i]+8,
-				__min(strlen((const char *)(argv[i]+8)), 63));
+		else if (strcasecmp(argv[i], PIDFILE_OPT) == 0) {
+			const char *pidArg = argv[i]+PIDFILE_OPT_LEN;
+			size_t pidArgLen = strnlen(pidArg, sizeof(pidfile));
+			if (pidArgLen == sizeof(pidfile)) {
+				lprintf(LOG_ERR,
+					"The pidfile path is too long. It must be fewer than %d characters\n",
+					sizeof(pidfile) - 1);
+				return (-1);
+			}
+			strncpy(pidfile, pidArg, pidArgLen);
 		}
 	}
 

@@ -1441,7 +1441,7 @@ ipmi_spd_print(uint8_t *spd_data, int len)
 		if (len < 348)
 			return -1;
 
-		/* "Logical rank" referes to the individually addressable die
+		/* "Logical rank" refers to the individually addressable die
 		 * in a 3DS stack and has no meaning for monolithic or
 		 * multi-load stacked SDRAMs; however, for the purposes of
 		 * calculating the capacity of the module, one should treat

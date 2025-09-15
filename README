@@ -22,7 +22,7 @@ configuration parameters, and perform remote chassis power control.
 
 Background
 ==========
-I originally wrote ipmitool while between projects and employeed at Sun
+I originally wrote ipmitool while between projects and employed at Sun
 Microsystems.  Sun had just embarked on a new line of general-purpose x86
 servers that included an OEM Intel board with an IPMIv1.5 BMC on board.
 It started with an idea that remote chassis power control would be a handy
@@ -203,7 +203,7 @@ However, trying to dual bridge commands locally with :
  ipmitool -B 0 -T 0x9a -m 0x94 -t 0x7a -b 7 mc selftest didn't work 
  (it returned the same data as  ipmitool -m 0x20 -t 0x7a -b 7 mc selftest )
  
-The reason was that the "openipmi" interface pluging didn't 
+The reason was that the "openipmi" interface plugin didn't 
 encapsulate/decapsulate the message and didn't even detect the intent
 to double bridge the request.
 

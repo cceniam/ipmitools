@@ -132,7 +132,7 @@ ipmi_password_file_read(char * filename)
 		return NULL;
 	}
 
-        /* remove traling <cr><nl><tab> */
+        /* remove trailing <cr><nl><tab> */
 	l = strcspn(pass, "\r\n\t");
 	if (l > 0) {
 		pass[l] = '\0';

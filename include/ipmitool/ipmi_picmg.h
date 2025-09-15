@@ -5,7 +5,6 @@
 
 #pragma once
 
-#include <ipmitool/ipmi.h>
 
 /* PICMG version */
 #define PICMG_CPCI_MAJOR_VERSION                   1
@@ -58,16 +57,16 @@
 #define PICMG_PMC                                  0x08
 #define PICMG_RTM                                  0x09
 
-#ifdef HAVE_PRAGMA_PACK
-#pragma pack(1)
+#if HAVE_PRAGMA_PACK
+#pragma pack(push, 1)
 #endif
 struct picmg_set_fru_activation_cmd {
    unsigned char  picmg_id;      /* always 0*/
    unsigned char  fru_id;        /* threshold setting mask */
    unsigned char  fru_state;     /* fru activation/deactivation */
 } ATTRIBUTE_PACKING;
-#ifdef HAVE_PRAGMA_PACK
-#pragma pack(0)
+#if HAVE_PRAGMA_PACK
+#pragma pack(pop)
 #endif
 
 typedef enum picmg_busres_board_cmd_types {

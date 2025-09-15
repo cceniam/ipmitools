@@ -49,12 +49,12 @@
 * - Dynamic Power Node Manager
 * - Intelligent Power Node Manager
 * 
-* Consult Intel litterature for more information on this technology.
+* Consult Intel literature for more information on this technology.
 *
 * The ME firmware resides on the platform boot flash and contains read only
 * boot code for the ME as well as boot image redundancy support. 
 *
-* This module implements an Upgrade Agent for the ME firwmare. Because the ME 
+* This module implements an Upgrade Agent for the ME firmware. Because the ME 
 * implements IPMI command handling, the agent speaks directly to the ME. In other
 * words, in order the reach the ME, the BMC must implement IPMB bridging.
 *
@@ -128,8 +128,8 @@ typedef enum tImeUpdateType
 } tImeUpdateType;
 
 
-#ifdef HAVE_PRAGMA_PACK
-#pragma pack(1)
+#if HAVE_PRAGMA_PACK
+#pragma pack(push, 1)
 #endif
 typedef struct sImeStatus {
    uint8_t image_status;
@@ -140,19 +140,19 @@ typedef struct sImeStatus {
    uint8_t dependent_flag;
    uint8_t free_area_size[4];
 } ATTRIBUTE_PACKING tImeStatus ;
-#ifdef HAVE_PRAGMA_PACK
-#pragma pack(0)
+#if HAVE_PRAGMA_PACK
+#pragma pack(pop)
 #endif
 
-#ifdef HAVE_PRAGMA_PACK
-#pragma pack(1)
+#if HAVE_PRAGMA_PACK
+#pragma pack(push, 1)
 #endif
 typedef struct sImeCaps {
    uint8_t area_supported;
    uint8_t special_caps;
 } ATTRIBUTE_PACKING tImeCaps ;
-#ifdef HAVE_PRAGMA_PACK
-#pragma pack(0)
+#if HAVE_PRAGMA_PACK
+#pragma pack(pop)
 #endif
 
 

@@ -58,7 +58,7 @@
 #define IPMI_RAKP_STATUS_INVALID_INTEGRITY_CHECK_VALUE      0x0F
 #define IPMI_RAKP_STATUS_INVALID_CONFIDENTIALITY_ALGORITHM  0x10
 #define IPMI_RAKP_STATUS_NO_CIPHER_SUITE_MATCH              0x11
-#define IPMI_RAKP_STATUS_ILLEGAL_PARAMTER                   0x12	
+#define IPMI_RAKP_STATUS_ILLEGAL_PARAMETER                  0x12
 
 
 #define IPMI_LAN_CHANNEL_1	0x07
@@ -114,7 +114,7 @@
 
 /*
  *This is accurate, as long as we're only passing 1 auth algorithm,
- * one integrity algorithm, and 1 encyrption algorithm
+ * one integrity algorithm, and 1 encryption algorithm
  */
 #define IPMI_OPEN_SESSION_REQUEST_SIZE 32
 #define IPMI_RAKP1_MESSAGE_SIZE        44

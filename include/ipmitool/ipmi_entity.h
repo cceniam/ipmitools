@@ -32,8 +32,9 @@
 
 #pragma once
 
-#ifdef HAVE_PRAGMA_PACK
-#pragma pack(1)
+
+#if HAVE_PRAGMA_PACK
+#pragma pack(push, 1)
 #endif
 struct entity_id {
 	uint8_t	id;			/* physical entity id */
@@ -45,6 +46,6 @@ struct entity_id {
 	uint8_t	logical     : 1;	/* physical/logical */
 #endif
 } ATTRIBUTE_PACKING;
-#ifdef HAVE_PRAGMA_PACK
-#pragma pack(0)
+#if HAVE_PRAGMA_PACK
+#pragma pack(pop)
 #endif

@@ -94,7 +94,7 @@ ipmi_openipmi_open(struct ipmi_intf *intf)
 {
 	char ipmi_dev[16];
 	char ipmi_devfs[16];
-	char ipmi_devfs2[16];
+	char ipmi_devfs2[17];
 	int devnum = 0;
 
 	devnum = intf->devnum;

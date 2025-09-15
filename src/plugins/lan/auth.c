@@ -30,9 +30,7 @@
  * EVEN IF SUN HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
  */
 
-#include <stdlib.h>
 #include <stdio.h>
-#include <inttypes.h>
 #include <string.h>
 #include <sys/types.h>
 #include <unistd.h>
@@ -210,7 +208,8 @@ uint8_t * ipmi_auth_special(struct ipmi_session * s)
 	memset(&state, 0, sizeof(md5_state_t));
 
 	md5_init(&state);
-	md5_append(&state, (const md5_byte_t *)s->authcode, strlen(s->authcode));
+	md5_append(&state, (const md5_byte_t *)s->authcode,
+	           strlen((const char *)s->authcode));
 	md5_finish(&state, digest);
 
 	for (i=0; i<16; i++)

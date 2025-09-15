@@ -43,7 +43,7 @@ void
 ipmi_intf_set_max_response_data_size(struct ipmi_intf * intf, uint16_t size);
 
 #if HAVE_PRAGMA_PACK
-# pragma pack(push, 1)
+#pragma pack(push, 1)
 #endif
 
 /* HPM.x Get Capabilities request */
@@ -59,7 +59,7 @@ struct hpm2_cmd_get_capabilities_rp {
 } ATTRIBUTE_PACKING;
 
 #if HAVE_PRAGMA_PACK
-# pragma pack(pop)
+#pragma pack(pop)
 #endif
 
 /* IPMI Get LAN Configuration Parameters command */

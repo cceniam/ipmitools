@@ -112,8 +112,8 @@ enum cipher_suite_format_tag {
 	STANDARD_CIPHER_SUITE = 0xc0,
 	OEM_CIPHER_SUITE = 0xc1,
 };
-#ifdef HAVE_PRAGMA_PACK
-#pragma pack(1)
+#if HAVE_PRAGMA_PACK
+#pragma pack(push, 1)
 #endif
 struct std_cipher_suite_record_t {
 	uint8_t start_of_record;
@@ -130,8 +130,8 @@ struct oem_cipher_suite_record_t {
 	uint8_t integrity_alg;
 	uint8_t crypt_alg;
 } ATTRIBUTE_PACKING;
-#ifdef HAVE_PRAGMA_PACK
-#pragma pack(0)
+#if HAVE_PRAGMA_PACK
+#pragma pack(pop)
 #endif
 #define CIPHER_ALG_MASK 0x3f
 #define MAX_CIPHER_SUITE_RECORD_OFFSET 0x40
@@ -153,8 +153,8 @@ struct oem_cipher_suite_record_t {
  * The Get Authentication Capabilities response structure
  * From table 22-15 of the IPMI v2.0 spec
  */
-#ifdef HAVE_PRAGMA_PACK
-#pragma pack(1)
+#if HAVE_PRAGMA_PACK
+#pragma pack(push, 1)
 #endif
 struct get_channel_auth_cap_rsp {
 	uint8_t channel_number;
@@ -196,8 +196,8 @@ struct get_channel_auth_cap_rsp {
 	uint8_t oem_id[3];    /* IANA enterprise number for auth type */
 	uint8_t oem_aux_data; /* Additional OEM specific data for oem auths */
 } ATTRIBUTE_PACKING;
-#ifdef HAVE_PRAGMA_PACK
-#pragma pack(0)
+#if HAVE_PRAGMA_PACK
+#pragma pack(pop)
 #endif
 
 int _ipmi_get_channel_access(struct ipmi_intf *intf,

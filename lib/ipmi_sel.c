@@ -66,9 +66,9 @@ struct ipmi_sel_oem_msg_rec {
 
 #define SEL_BYTE(n) (n-3) /* So we can refer to byte positions in log entries (byte 3 is at index 0, etc) */
 
-// Definiation for the Decoding the SEL OEM Bytes for DELL Platfoms
+// Definition for the Decoding the SEL OEM Bytes for DELL Platforms
 #define BIT(x)	 (1 << x)	/* Select the Bit */
-#define	SIZE_OF_DESC	128	/* Max Size of the description String to be displyed for the Each sel entry */
+#define	SIZE_OF_DESC	128	/* Max Size of the description String to be displayed for the Each sel entry */
 #define	MAX_CARDNO_STR	32	/* Max Size of Card number string */
 #define	MAX_DIMM_STR	32	/* Max Size of DIMM string */
 #define	MAX_CARD_STR	32	/* Max Size of Card string */
@@ -426,7 +426,7 @@ static struct ipmi_event_sensor_types __UNUSED__(oem_kontron_event_reading_types
    { 0, 0, 0xFF, NULL }
 };
 
-/* NOTE: unused paramter kept in for consistency. */
+/* NOTE: unused parameter kept in for consistency. */
 char *
 get_kontron_evt_desc(struct ipmi_intf *__UNUSED__(intf), struct sel_event_record *rec)
 {
@@ -2042,13 +2042,13 @@ ipmi_sel_print_std_entry_verbose(struct ipmi_intf * intf, struct sel_event_recor
 	if (evt->record_type < 0xe0)
 	{
 		printf(" Timestamp             : ");
-		if (evt->record_type < 0xc0)
-			printf("%s %s", ipmi_timestamp_date(evt->sel_type.standard_type.timestamp),
-				ipmi_timestamp_time(evt->sel_type.standard_type.timestamp));
-		else
-			printf("%s %s", ipmi_timestamp_date(evt->sel_type.oem_ts_type.timestamp),
-				ipmi_timestamp_time(evt->sel_type.oem_ts_type.timestamp));
-		printf("\n");
+		if (evt->record_type < 0xc0) {
+			printf("%s ", ipmi_timestamp_date(evt->sel_type.standard_type.timestamp));
+			printf("%s\n", ipmi_timestamp_time(evt->sel_type.standard_type.timestamp));
+		} else {
+			printf("%s ", ipmi_timestamp_date(evt->sel_type.oem_ts_type.timestamp));
+			printf("%s\n", ipmi_timestamp_time(evt->sel_type.oem_ts_type.timestamp));
+		}
 	}
 
 	if (evt->record_type >= 0xc0)
@@ -2133,8 +2133,8 @@ ipmi_sel_print_extended_entry_verbose(struct ipmi_intf * intf, struct sel_event_
 	if (evt->record_type < 0xe0)
 	{
 		printf(" Timestamp             : ");
-		printf("%s %s\n", ipmi_timestamp_date(evt->sel_type.standard_type.timestamp),
-		ipmi_timestamp_time(evt->sel_type.standard_type.timestamp));
+		printf("%s ", ipmi_timestamp_date(evt->sel_type.standard_type.timestamp));
+		printf("%s\n", ipmi_timestamp_time(evt->sel_type.standard_type.timestamp));
 	}
 
 

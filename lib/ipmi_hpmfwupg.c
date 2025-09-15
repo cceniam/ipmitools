@@ -312,7 +312,7 @@ HpmDisplayVersion(int mode, VERSIONINFO *pVersion, int upgradable)
 	}
 }
 
-/* HpmfwupgTargerCheck - get target information and displays it on the screen
+/* HpmfwupgTargetCheck - get target information and displays it on the screen
  */
 int
 HpmfwupgTargetCheck(struct ipmi_intf *intf, int option)
@@ -741,7 +741,7 @@ HpmfwupgPreparationStage(struct ipmi_intf *intf,
 			lprintf(LOG_NOTICE, "\n    Upgrade undesirable at this moment");
 			return HPMFWUPG_ERROR;
 		}
-		/* Get confimation from the user if he wants to continue when
+		/* Get confirmation from the user if he wants to continue when
 		 * service affected during upgrade
 		 */
 		if (!(option & COMPARE_MODE)
@@ -1324,7 +1324,7 @@ HpmFwupgActionUploadFirmware(struct HpmfwupgComponentBitMask components,
 		/* Set image length */
 		finishCmd.req.componentId = componentId;
 		/* We need to send the actual data that is sent
-		 * not the comlete firmware image length
+		 * not the complete firmware image length
 		 */
 		finishCmd.req.imageLength[0] = totalSent & 0xFF;
 		finishCmd.req.imageLength[1] = (totalSent >> 8) & 0xFF;
@@ -1349,7 +1349,7 @@ HpmfwupgActivationStage(struct ipmi_intf *intf,
 	struct HpmfwupgActivateFirmwareCtx activateCmd;
 	struct HpmfwupgImageHeader *pImageHeader = (struct HpmfwupgImageHeader*)
 		pFwupgCtx->pImageData;
-	/* Print out stuf...*/
+	/* Print out stuff...*/
 	printf("    ");
 	fflush(stdout);
 	/* Activate new firmware */
@@ -1521,7 +1521,7 @@ HpmfwupgGetTargetUpgCapabilities(struct ipmi_intf *intf,
 		lprintf(LOG_NOTICE, "Aut rollback override...[%c]   ",
 				pCtx->resp.GlobalCapabilities.bitField.autRollbackOverride ? 'y' : 'n');
 		lprintf(LOG_NOTICE, "IPMC degraded...........[%c]   ",
-				pCtx->resp.GlobalCapabilities.bitField.ipmcDegradedDurinUpg ? 'y' : 'n');
+				pCtx->resp.GlobalCapabilities.bitField.ipmcDegradedDuringUpg ? 'y' : 'n');
 		lprintf(LOG_NOTICE, "Deferred activation.....[%c]   ",
 				pCtx->resp.GlobalCapabilities.bitField.deferActivation ? 'y' : 'n');
 		lprintf(LOG_NOTICE, "Service affected........[%c]   ",
@@ -2511,7 +2511,7 @@ ipmi_hpmfwupg_main(struct ipmi_intf *intf, int argc, char **argv)
 								"Given Component ID '%s' is invalid.",
 								argv[i+1]);
 						lprintf(LOG_ERR,
-								"Valid Compoment ID is: <0..7>");
+								"Valid Component ID is: <0..7>");
 						return HPMFWUPG_ERROR;
 					}
 					if( verbose ) {
@@ -2554,7 +2554,7 @@ ipmi_hpmfwupg_main(struct ipmi_intf *intf, int argc, char **argv)
 								"Given Component ID '%s' is invalid.",
 								argv[i+1]);
 						lprintf(LOG_ERR,
-								"Valid Compoment ID is: <0..7>");
+								"Valid Component ID is: <0..7>");
 						return HPMFWUPG_ERROR;
 					}
 					if( verbose ) {
@@ -2603,7 +2603,7 @@ ipmi_hpmfwupg_main(struct ipmi_intf *intf, int argc, char **argv)
 					"Given Component ID '%s' is invalid.",
 					argv[1]);
 			lprintf(LOG_ERR,
-					"Valid Compoment ID is: <0..7>");
+					"Valid Component ID is: <0..7>");
 			return (-1);
 		}
 		if (str2uchar(argv[2], &(cmdCtx.req.selector)) != 0

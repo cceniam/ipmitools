@@ -64,8 +64,8 @@
 #define STATE_13_ASSERTED  0x20
 #define STATE_14_ASSERTED  0x40
 
-#ifdef HAVE_PRAGMA_PACK
-#pragma pack(1)
+#if HAVE_PRAGMA_PACK
+#pragma pack(push, 1)
 #endif
 struct sensor_set_thresh_rq {
 	uint8_t	sensor_num;     	/* sensor # */
@@ -77,8 +77,8 @@ struct sensor_set_thresh_rq {
 	uint8_t	upper_crit;	        /* new upper critical threshold*/
 	uint8_t	upper_non_recov;	/* new upper non recoverable threshold*/
 } ATTRIBUTE_PACKING;
-#ifdef HAVE_PRAGMA_PACK
-#pragma pack(0)
+#if HAVE_PRAGMA_PACK
+#pragma pack(pop)
 #endif
 
 

@@ -40,8 +40,8 @@
 #define EVENT_DIR_ASSERT	0
 #define EVENT_DIR_DEASSERT	1
 
-#ifdef HAVE_PRAGMA_PACK
-#pragma pack(1)
+#if HAVE_PRAGMA_PACK
+#pragma pack(push, 1)
 #endif
 struct platform_event_msg {
 	uint8_t evm_rev;
@@ -56,8 +56,8 @@ struct platform_event_msg {
 #endif
 	uint8_t event_data[3];
 } ATTRIBUTE_PACKING;
-#ifdef HAVE_PRAGMA_PACK
-#pragma pack(0)
+#if HAVE_PRAGMA_PACK
+#pragma pack(pop)
 #endif
 
 /* See IPMI 2.0 Specification, Appendix G, Table G-1, "Event Commands"  */

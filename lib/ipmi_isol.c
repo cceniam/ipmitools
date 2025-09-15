@@ -98,7 +98,7 @@ static int ipmi_get_isol_info(struct ipmi_intf * intf,
 	}
 	params->enabled = rsp->data[1];
 
-	/* GET ISOL AUTHENTICATON CONFIG */
+	/* GET ISOL AUTHENTICATION CONFIG */
 	
 	memset(data, 0, 6);
 	data[0] = 0x00;

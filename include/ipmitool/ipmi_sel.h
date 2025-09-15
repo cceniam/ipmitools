@@ -56,8 +56,8 @@ enum {
 	IPMI_EVENT_CLASS_OEM,
 };
 
-#ifdef HAVE_PRAGMA_PACK
-#pragma pack(1)
+#if HAVE_PRAGMA_PACK
+#pragma pack(push, 1)
 #endif
 struct sel_get_rq {
 	uint16_t	reserve_id;
@@ -65,8 +65,8 @@ struct sel_get_rq {
 	uint8_t	offset;
 	uint8_t	length;
 } ATTRIBUTE_PACKING;
-#ifdef HAVE_PRAGMA_PACK
-#pragma pack(0)
+#if HAVE_PRAGMA_PACK
+#pragma pack(pop)
 #endif
 
 struct standard_spec_sel_rec{
@@ -120,8 +120,8 @@ struct oem_nots_spec_sel_rec{
 	uint8_t oem_defined[SEL_OEM_NOTS_DATA_LEN];
 };
 
-#ifdef HAVE_PRAGMA_PACK
-#pragma pack(1)
+#if HAVE_PRAGMA_PACK
+#pragma pack(push, 1)
 #endif
 struct sel_event_record {
 	uint16_t	record_id;
@@ -132,8 +132,8 @@ struct sel_event_record {
 		struct oem_nots_spec_sel_rec oem_nots_type;
 	} sel_type;
 } ATTRIBUTE_PACKING;
-#ifdef HAVE_PRAGMA_PACK
-#pragma pack(0)
+#if HAVE_PRAGMA_PACK
+#pragma pack(pop)
 #endif
 
 struct ipmi_event_sensor_types {
@@ -615,7 +615,7 @@ static const struct ipmi_event_sensor_types oem_kontron_event_types[] = {
     { 0xC1, 0x01, 0xff, "Bridge Reset" },
     { 0xC1, 0x02, 0xff, "Backplane" },
     { 0xC1, 0x03, 0xff, "Hotswap Fault" },
-    { 0xC1, 0x04, 0xff, "Hotswap Healty" },
+    { 0xC1, 0x04, 0xff, "Hotswap Healthy" },
     { 0xC1, 0x05, 0xff, "Unknown" },
     { 0xC1, 0x06, 0xff, "ITP" },
     { 0xC1, 0x07, 0xff, "Hardware Watchdog" },
