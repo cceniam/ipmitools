@@ -1435,7 +1435,7 @@ ipmi_dcmi_pwr_rd(struct ipmi_intf * intf, uint8_t sample_time)
 	       val.max_sample);
 	printf("    Average power reading over sample period: %8d Watts\n",
 	       val.avg_pwr);
-	printf("    IPMI timestamp:                           %s",
+	printf("    IPMI timestamp:                           %s\n",
 	       ipmi_timestamp_numeric(ipmi32toh(&val.time_stamp)));
 	printf("    Sampling period:                          ");
 	if (sample_time)
