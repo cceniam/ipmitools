@@ -7,7 +7,7 @@ on:
   pull_request:
     branches: [ master ]
   workflow_dispatch:
-    branches: [ bugfix/fix-ci-builds ]
+
 jobs:
   linux:
     strategy:
@@ -75,10 +75,9 @@ jobs:
     - name: make distcheck
       run: make distcheck
 
-  win-srv-2019:
+  win-srv-2025:
 
-    runs-on: windows-2019
-
+    runs-on: Windows Server 2025
     steps:
     - name: install dependencies
       run: |-
