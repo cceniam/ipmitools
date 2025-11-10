@@ -75,9 +75,9 @@ jobs:
     - name: make distcheck
       run: make distcheck
 
-  win-srv-2025:
+  win:
 
-    runs-on: Windows Server 2025
+    runs-on: windows-latest
     steps:
     - name: install dependencies
       run: |-
